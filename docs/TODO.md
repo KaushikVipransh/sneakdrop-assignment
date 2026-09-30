@@ -49,7 +49,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: unit test passes.
 - [x] **T14. `getCounts(tx, dropId)`.** Returns `{ total, sold, held, available }` computed from rows (no stored counter).
   Done when: test with seeded holds/orders returns correct numbers.
-- [ ] **T15. `reconcile(tx, dropId, now)` — expiry only.** Mark `ACTIVE` holds with `expires_at <= now` as `EXPIRED`, write audit rows. (Promotion added in M2.)
+- [x] **T15. `reconcile(tx, dropId, now)` — expiry only.** Mark `ACTIVE` holds with `expires_at <= now` as `EXPIRED`, write audit rows. (Promotion added in M2.)
   Done when: test: expired hold becomes EXPIRED, unexpired stays ACTIVE.
 - [ ] **T16. `createHold(userId, dropId)`.** In one tx: lock, reconcile, check user has no active hold, check `orders + active holds < max_per_user`, check `available ≥ 1`, insert hold with `expires_at = now + hold_seconds`. Return typed result: `HOLD_CREATED | ALREADY_HOLDING (returns existing) | LIMIT_REACHED | SOLD_OUT | NOT_STARTED`.
   Done when: unit tests cover every result type.
