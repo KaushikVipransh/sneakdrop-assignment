@@ -5,6 +5,7 @@ const envSchema = z.object({
   DATABASE_URL: z.url({ message: "DATABASE_URL must be a Postgres connection URL" }),
   DATABASE_URL_DIRECT: z.url().optional(),
   DB_POOL_MAX: z.coerce.number().int().positive().default(10),
+  WEBHOOK_SECRET: z.string().min(16, "WEBHOOK_SECRET must be at least 16 characters"),
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -89,7 +89,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: migration applies.
 - [x] **T31. Schema: `fakepay_deliveries` + `fakepay_settings`.** Deliveries: `id`, `event_id`, `type`, `intent_id`, `payload`, `deliver_at`, `attempts`, `status` (`PENDING`, `DELIVERED`, `DEAD`), `last_error`. Settings: single row with `min_delay_ms`, `max_delay_ms`, `duplicate_rate`, `reorder_rate`, `fail_rate`.
   Done when: migration applies; seed inserts default settings (all zero chaos).
-- [ ] **T32. HMAC signing util.** `sign(payload, secret)` and `verify(header, payload, secret)` with timestamp + constant-time compare. Add `WEBHOOK_SECRET` to env schema.
+- [x] **T32. HMAC signing util.** `sign(payload, secret)` and `verify(header, payload, secret)` with timestamp + constant-time compare. Add `WEBHOOK_SECRET` to env schema.
   Done when: tests for valid, tampered, and stale signatures.
 - [ ] **T33. `fakepay.createIntent(holdId)`.** Writes intent and schedules deliveries per chaos settings (success or fail by `fail_rate`; extra copies by `duplicate_rate`; opposite event after success by `reorder_rate`; random delay in range). Chaos RNG injectable for tests.
   Done when: tests with fixed seed produce expected delivery rows.
