@@ -138,7 +138,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: component test renders correct counts per state.
 - [x] **T50. Header, stats strip, `LiveDot`.** Per DESIGN.md §3.4.
   Done when: renders; no layout shift at 375 px.
-- [ ] **T51. Main card state machine.** Pure function `deriveCardState(status)` → one of 12 states (DESIGN.md §3.3) + card UI for each.
+- [x] **T51. Main card state machine.** Pure function `deriveCardState(status)` → one of 12 states (DESIGN.md §3.3) + card UI for each.
   Done when: unit test covers all 12 states.
 - [ ] **T52. Wire actions.** Buy, Pay, Release, Join, Leave buttons call routes, optimistic loading, toast on error, refetch on success.
   Done when: manual run: full happy path works in the browser.
