@@ -33,7 +33,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
 
 - [x] **T06. Drizzle setup.** Install `drizzle-orm`, `drizzle-kit`, `pg` (local) / `@neondatabase/serverless` (prod). `src/server/db/client.ts` exports a pooled client and a `withTx()` helper.
   Done when: a script runs `select 1` through Drizzle.
-- [ ] **T07. Schema: `drops`.** `id`, `name`, `total_stock`, `hold_seconds` (default 300), `max_per_user` (default 2), `starts_at`, `created_at`.
+- [x] **T07. Schema: `drops`.** `id`, `name`, `total_stock`, `hold_seconds` (default 300), `max_per_user` (default 2), `starts_at`, `created_at`.
   Done when: migration generates and applies cleanly.
 - [ ] **T08. Schema: `holds`.** `id`, `drop_id`, `user_id`, `status` enum (`ACTIVE`, `CONVERTED`, `EXPIRED`, `RELEASED`), `source` enum (`buy`, `waitlist`), `created_at`, `expires_at`, `ended_at`. Partial unique index `(drop_id, user_id) WHERE status = 'ACTIVE'`.
   Done when: migration applies; inserting two ACTIVE holds for one user fails with unique violation (test).
