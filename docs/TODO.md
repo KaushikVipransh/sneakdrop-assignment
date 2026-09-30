@@ -130,7 +130,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: a token test page renders both themes correctly.
 - [x] **T46. shadcn/ui base.** Add Button, Card, Toast (Sonner). Restyle to tokens.
   Done when: variants render per DESIGN.md §5.
-- [ ] **T47. `useDropStatus` hook.** TanStack Query, `refetchInterval` 1500 ms, computes `serverOffset`.
+- [x] **T47. `useDropStatus` hook.** TanStack Query, `refetchInterval` 1500 ms, computes `serverOffset`.
   Done when: hook test with mocked fetch.
 - [ ] **T48. `Countdown` component.** From `expiresAt` + `serverOffset`; warning < 60 s; `aria-live` throttled.
   Done when: component test with fake timers.
