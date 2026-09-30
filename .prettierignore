@@ -1,0 +1,10 @@
+.next
+node_modules
+pnpm-lock.yaml
+drizzle
+docs
+coverage
+README.md
+AGENTS.md
+CONTEXT.md
+CLAUDE.md
