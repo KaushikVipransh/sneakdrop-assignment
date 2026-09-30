@@ -4,6 +4,7 @@ const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   DATABASE_URL: z.url({ message: "DATABASE_URL must be a Postgres connection URL" }),
   DATABASE_URL_DIRECT: z.url().optional(),
+  DB_POOL_MAX: z.coerce.number().int().positive().default(10),
 });
 
 export type Env = z.infer<typeof envSchema>;
