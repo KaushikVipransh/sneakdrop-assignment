@@ -51,4 +51,5 @@ TypeScript · Next.js 16 App Router (UI + Route Handlers) · Tailwind v4 + shadc
 - Docker Desktop is broken on this machine; `pnpm db:local` runs Postgres 17 from npm binaries on the same port/credentials.
 - 2026-09-30: M2 + M3 done (T21–T38). Waitlist + promotion, fast-check property test, fake provider outbox + dispatcher, signed webhook route, chaos e2e tests. 92 tests.
 - 2026-09-30: M4 done (T39–T54). Better Auth guest + magic link, API routes, status route, cron route, Ledger UI (12 card states), Playwright e2e + axe (`pnpm e2e`, needs `pnpm dev`).
-- **Next task: T55.**
+- 2026-10-01: M5 local work done (T55–T59), CI workflow written (T60 unticked until pushed), NOTES.md (T65), final review + 2 fixes (T66). 183 tests.
+- **Waiting on user:** push to origin (T60), Neon + Vercel deploy (T61–T64), screen recording (T67).
