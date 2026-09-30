@@ -51,7 +51,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: test with seeded holds/orders returns correct numbers.
 - [x] **T15. `reconcile(tx, dropId, now)` — expiry only.** Mark `ACTIVE` holds with `expires_at <= now` as `EXPIRED`, write audit rows. (Promotion added in M2.)
   Done when: test: expired hold becomes EXPIRED, unexpired stays ACTIVE.
-- [ ] **T16. `createHold(userId, dropId)`.** In one tx: lock, reconcile, check user has no active hold, check `orders + active holds < max_per_user`, check `available ≥ 1`, insert hold with `expires_at = now + hold_seconds`. Return typed result: `HOLD_CREATED | ALREADY_HOLDING (returns existing) | LIMIT_REACHED | SOLD_OUT | NOT_STARTED`.
+- [x] **T16. `createHold(userId, dropId)`.** In one tx: lock, reconcile, check user has no active hold, check `orders + active holds < max_per_user`, check `available ≥ 1`, insert hold with `expires_at = now + hold_seconds`. Return typed result: `HOLD_CREATED | ALREADY_HOLDING (returns existing) | LIMIT_REACHED | SOLD_OUT | NOT_STARTED`.
   Done when: unit tests cover every result type.
 - [ ] **T17. Concurrency test.** 1,000 distinct users call `createHold` in parallel against 20 stock.
   Done when: exactly 20 `HOLD_CREATED`, 980 `SOLD_OUT`, zero errors. Run 5 times, same result.
