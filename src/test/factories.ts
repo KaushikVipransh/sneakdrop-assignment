@@ -1,5 +1,5 @@
 import { db } from "@/server/db/client";
-import { drops, holds, orders, type Drop, type Hold } from "@/server/db/schema";
+import { drops, holds, orders, waitlistEntries, type Drop, type Hold } from "@/server/db/schema";
 
 export async function createDrop(
   overrides: Partial<typeof drops.$inferInsert> = {},
@@ -41,4 +41,13 @@ export async function insertOrder(drop: Drop, userId: string) {
     .values({ dropId: drop.id, userId, holdId: hold.id })
     .returning();
   return order!;
+}
+
+/** Inserts a WAITING waitlist entry; pass increasing `createdAt` to fix queue order. */
+export async function insertWaiting(drop: Drop, userId: string, createdAt = new Date()) {
+  const [entry] = await db
+    .insert(waitlistEntries)
+    .values({ dropId: drop.id, userId, createdAt })
+    .returning();
+  return entry!;
 }
