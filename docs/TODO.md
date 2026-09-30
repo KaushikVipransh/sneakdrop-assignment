@@ -43,7 +43,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: migration applies.
 - [ ] **T11. Seed script.** `pnpm db:seed` creates one drop with 20 pairs, `starts_at = now()`. `pnpm db:reset` truncates and reseeds.
   Done when: both commands run twice in a row without error.
-- [ ] **T12. Test DB harness.** Vitest global setup: use a separate `sneakdrop_test` DB, run migrations, truncate between tests.
+- [x] **T12. Test DB harness.** Vitest global setup: use a separate `sneakdrop_test` DB, run migrations, truncate between tests.
   Done when: a DB test passes and leaves no rows behind.
 - [ ] **T13. `lockDrop(tx, dropId)`.** `SELECT … FOR UPDATE` on the drop row; returns drop or throws `DropNotFound`.
   Done when: unit test passes.
