@@ -29,6 +29,13 @@
       "when": 1790780472427,
       "tag": "0003_audit_log",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790781139425,
+      "tag": "0004_waitlist",
+      "breakpoints": true
     }
   ]
 }

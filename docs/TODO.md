@@ -64,7 +64,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
 
 ## M2 — Waitlist and promotion
 
-- [ ] **T21. Schema: `waitlist_entries`.** `id`, `drop_id`, `user_id`, `status` enum (`WAITING`, `PROMOTED`, `LEFT`, `SKIPPED`), `created_at`, `ended_at`. Partial unique `(drop_id, user_id) WHERE status = 'WAITING'`. Index `(drop_id, status, created_at)`.
+- [x] **T21. Schema: `waitlist_entries`.** `id`, `drop_id`, `user_id`, `status` enum (`WAITING`, `PROMOTED`, `LEFT`, `SKIPPED`), `created_at`, `ended_at`. Partial unique `(drop_id, user_id) WHERE status = 'WAITING'`. Index `(drop_id, status, created_at)`.
   Done when: migration applies.
 - [ ] **T22. `joinWaitlist(userId, dropId)`.** Lock, reconcile. Allowed only if `available = 0`, user has no active hold, user under limit. Idempotent: returns existing entry.
   Done when: tests for each rejection and for idempotency.

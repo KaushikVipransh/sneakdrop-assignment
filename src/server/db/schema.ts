@@ -65,6 +65,33 @@ export const holds = pgTable(
 );
 
 export type Hold = typeof holds.$inferSelect;
+
+export const waitlistStatus = pgEnum("waitlist_status", ["WAITING", "PROMOTED", "LEFT", "SKIPPED"]);
+
+/** FIFO queue of users waiting for a pair to come back. */
+export const waitlistEntries = pgTable(
+  "waitlist_entries",
+  {
+    id: bigserial("id", { mode: "number" }).primaryKey(),
+    dropId: uuid("drop_id")
+      .notNull()
+      .references(() => drops.id, { onDelete: "cascade" }),
+    userId: text("user_id").notNull(),
+    status: waitlistStatus("status").notNull().default("WAITING"),
+    createdAt: createdAt(),
+    endedAt: timestamp("ended_at", { withTimezone: true }),
+    /** The hold created when this entry was promoted. */
+    holdId: uuid("hold_id").references(() => holds.id, { onDelete: "set null" }),
+  },
+  (t) => [
+    uniqueIndex("waitlist_one_waiting_per_user")
+      .on(t.dropId, t.userId)
+      .where(sql`${t.status} = 'WAITING'`),
+    index("waitlist_drop_status_created").on(t.dropId, t.status, t.createdAt, t.id),
+  ],
+);
+
+export type WaitlistEntry = typeof waitlistEntries.$inferSelect;
 export type HoldStatus = Hold["status"];
 
 /** A confirmed purchase. Exactly one per converted hold. */
