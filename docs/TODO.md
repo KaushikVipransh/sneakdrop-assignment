@@ -53,9 +53,9 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: test: expired hold becomes EXPIRED, unexpired stays ACTIVE.
 - [x] **T16. `createHold(userId, dropId)`.** In one tx: lock, reconcile, check user has no active hold, check `orders + active holds < max_per_user`, check `available ≥ 1`, insert hold with `expires_at = now + hold_seconds`. Return typed result: `HOLD_CREATED | ALREADY_HOLDING (returns existing) | LIMIT_REACHED | SOLD_OUT | NOT_STARTED`.
   Done when: unit tests cover every result type.
-- [ ] **T17. Concurrency test.** 1,000 distinct users call `createHold` in parallel against 20 stock.
+- [x] **T17. Concurrency test.** 1,000 distinct users call `createHold` in parallel against 20 stock.
   Done when: exactly 20 `HOLD_CREATED`, 980 `SOLD_OUT`, zero errors. Run 5 times, same result.
-- [ ] **T18. Same-user race test.** One user calls `createHold` 50 times in parallel.
+- [x] **T18. Same-user race test.** One user calls `createHold` 50 times in parallel.
   Done when: exactly 1 hold exists; all 50 calls return that hold or `ALREADY_HOLDING`.
 - [ ] **T19. `releaseHold(userId, holdId)`.** Only owner, only ACTIVE; sets `RELEASED`.
   Done when: tests for owner / non-owner / already-terminal.
