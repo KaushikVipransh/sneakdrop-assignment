@@ -22,7 +22,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: `pnpm dev` serves the default page at `http://localhost:3000`.
 - [x] **T02. Strict TypeScript + scripts.** Enable `strict`, `noUncheckedIndexedAccess`. Add scripts: `typecheck` (`tsc --noEmit`), `lint`, `format` (Prettier), `test` (Vitest).
   Done when: `pnpm typecheck && pnpm lint` pass.
-- [ ] **T03. Vitest setup.** Install Vitest, add `vitest.config.ts` with `@/*` alias, add one trivial test.
+- [x] **T03. Vitest setup.** Install Vitest, add `vitest.config.ts` with `@/*` alias, add one trivial test.
   Done when: `pnpm test` passes.
 - [ ] **T04. Local Postgres.** `docker-compose.yml` with Postgres 17 (port 5432, volume). Add `.env.example` with `DATABASE_URL`, `DATABASE_URL_DIRECT`.
   Done when: `docker compose up -d` and `psql $DATABASE_URL -c 'select 1'` work.
