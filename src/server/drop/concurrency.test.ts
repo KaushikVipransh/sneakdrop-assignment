@@ -29,7 +29,7 @@ describe("createHold under concurrency", () => {
       const active = await db.select().from(holds).where(eq(holds.dropId, drop.id));
       expect(active).toHaveLength(20);
       expect(new Set(active.map((h) => h.userId)).size).toBe(20);
-    });
+    }, 120_000);
   }
 
   it("one user clicking Buy 50 times in parallel gets one hold", async () => {

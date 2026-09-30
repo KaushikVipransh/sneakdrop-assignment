@@ -88,9 +88,12 @@ describe("getWaitlistPosition", () => {
     const drop = await soldOutDrop();
     for (const u of ["u1", "u2", "u3", "u4", "u5"]) await joinWaitlist(u, drop.id);
     const positions = async () =>
-      withTx(async (tx) =>
-        Promise.all(["u1", "u2", "u3", "u4", "u5"].map((u) => getWaitlistPosition(tx, drop.id, u))),
-      );
+      withTx(async (tx) => {
+        const out: (number | null)[] = [];
+        for (const u of ["u1", "u2", "u3", "u4", "u5"])
+          out.push(await getWaitlistPosition(tx, drop.id, u));
+        return out;
+      });
     expect(await positions()).toEqual([1, 2, 3, 4, 5]);
     await leaveWaitlist("u2", drop.id);
     expect(await positions()).toEqual([1, null, 2, 3, 4]);
