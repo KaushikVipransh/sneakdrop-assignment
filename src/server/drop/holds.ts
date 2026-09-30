@@ -1,4 +1,5 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
+import { db } from "../db/client";
 import { holds, type Hold, type HoldStatus } from "../db/schema";
 import { audit } from "./audit";
 import { getCounts } from "./counts";
@@ -14,12 +15,39 @@ export type CreateHoldResult =
   | { code: "SOLD_OUT"; canJoinWaitlist: boolean }
   | { code: "NOT_STARTED"; startsAt: Date };
 
+/**
+ * Lock-free answer for the common case of a click on a sold-out drop: no free
+ * pair, no hold due to expire, and the user holds nothing. Only ever answers
+ * SOLD_OUT and never writes, so it cannot oversell; anything else (or any
+ * doubt) goes through the locked path. At launch, this keeps the hundreds of
+ * losing clicks from queueing behind the drop lock.
+ */
+async function isPlainlySoldOut(userId: string, dropId: string, now?: Date): Promise<boolean> {
+  const at = now ?? sql`clock_timestamp()`;
+  const { rows } = await db.execute<{ sold_out: boolean }>(sql`
+    select
+      d.starts_at <= ${at}
+      and d.total_stock
+        - (select count(*) from orders o where o.drop_id = d.id)
+        - (select count(*) from holds h where h.drop_id = d.id and h.status = 'ACTIVE') <= 0
+      and not exists (
+        select 1 from holds h
+        where h.drop_id = d.id and h.status = 'ACTIVE' and (h.expires_at <= ${at} or h.user_id = ${userId})
+      ) as sold_out
+    from drops d where d.id = ${dropId}
+  `);
+  return rows[0]?.sold_out === true;
+}
+
 /** Reserves one pair for the user, if the rules allow it. */
-export function createHold(
+export async function createHold(
   userId: string,
   dropId: string,
   options: ClockOptions = {},
 ): Promise<CreateHoldResult> {
+  if (await isPlainlySoldOut(userId, dropId, options.now)) {
+    return { code: "SOLD_OUT", canJoinWaitlist: true };
+  }
   return inDropTx(dropId, options, async ({ tx, drop, now }) => {
     if (now < drop.startsAt) return { code: "NOT_STARTED", startsAt: drop.startsAt };
 

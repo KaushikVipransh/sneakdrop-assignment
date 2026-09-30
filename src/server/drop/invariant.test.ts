@@ -1,10 +1,10 @@
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { db, withTx } from "@/server/db/client";
-import { holds } from "@/server/db/schema";
+import { waitlistEntries } from "@/server/db/schema";
 import { createDrop, insertHold, insertOrder } from "@/test/factories";
 import { resetDb } from "@/test/db";
 import { InvariantViolation } from "./errors";
-import { createHold } from "./holds";
+import { joinWaitlist } from "./waitlist";
 import { assertInvariant } from "./invariant";
 
 describe("assertInvariant", () => {
@@ -46,7 +46,7 @@ describe("assertInvariant", () => {
     const drop = await createDrop({ totalStock: 1 });
     await insertOrder(drop, "a");
     await insertOrder(drop, "b"); // corrupt state: 2 orders for 1 pair
-    await expect(createHold("c", drop.id)).rejects.toBeInstanceOf(InvariantViolation);
-    expect(await db.select().from(holds)).toHaveLength(2); // only the two converted holds
+    await expect(joinWaitlist("c", drop.id)).rejects.toBeInstanceOf(InvariantViolation);
+    expect(await db.select().from(waitlistEntries)).toHaveLength(0); // the insert was rolled back
   });
 });

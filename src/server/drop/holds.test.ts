@@ -147,3 +147,31 @@ describe("release triggers promotion", () => {
     expect(active).toMatchObject([{ userId: "b", source: "waitlist" }]);
   });
 });
+
+describe("createHold in a sold-out drop", () => {
+  beforeEach(resetDb);
+  afterAll(resetDb);
+
+  it("still returns the caller's own hold", async () => {
+    const drop = await createDrop({ totalStock: 1 });
+    const mine = await insertHold(drop, "u1");
+    expect(await createHold("u1", drop.id)).toMatchObject({
+      code: "ALREADY_HOLDING",
+      hold: { id: mine.id },
+    });
+  });
+
+  it("still frees a due hold and sells it", async () => {
+    const drop = await createDrop({ totalStock: 1 });
+    await insertHold(drop, "other", { expiresAt: new Date(Date.now() - 1) });
+    expect((await createHold("u1", drop.id)).code).toBe("HOLD_CREATED");
+  });
+
+  it("answers SOLD_OUT without writing anything", async () => {
+    const drop = await createDrop({ totalStock: 1 });
+    await insertHold(drop, "other");
+    const before = await db.select().from(auditLog);
+    expect((await createHold("u1", drop.id)).code).toBe("SOLD_OUT");
+    expect(await db.select().from(auditLog)).toEqual(before);
+  });
+});
