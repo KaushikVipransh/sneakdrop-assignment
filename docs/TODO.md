@@ -132,7 +132,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: variants render per DESIGN.md §5.
 - [x] **T47. `useDropStatus` hook.** TanStack Query, `refetchInterval` 1500 ms, computes `serverOffset`.
   Done when: hook test with mocked fetch.
-- [ ] **T48. `Countdown` component.** From `expiresAt` + `serverOffset`; warning < 60 s; `aria-live` throttled.
+- [x] **T48. `Countdown` component.** From `expiresAt` + `serverOffset`; warning < 60 s; `aria-live` throttled.
   Done when: component test with fake timers.
 - [ ] **T49. `StockGrid` component.** 20 squares, states per DESIGN.md §3.2, hidden text summary.
   Done when: component test renders correct counts per state.
