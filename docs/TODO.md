@@ -151,7 +151,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
 
 - [x] **T55. Admin guard.** `ADMIN_EMAILS` env; `/admin` and admin routes require it.
   Done when: non-admin gets 403.
-- [ ] **T56. Admin data route.** Counts, invariant check, active holds, first 20 waiters, last 50 webhook events, refunds.
+- [x] **T56. Admin data route.** Counts, invariant check, active holds, first 20 waiters, last 50 webhook events, refunds.
   Done when: route test.
 - [ ] **T57. Admin page.** Layout per DESIGN.md §4, polling.
   Done when: renders live data during a manual run.

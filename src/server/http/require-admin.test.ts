@@ -39,7 +39,10 @@ describe("requireAdmin", () => {
       .update(user)
       .set({ email: process.env.ADMIN_EMAILS!.split(",")[0]!, isAnonymous: false });
     // Send only the session token so the 60 s cookie cache (still the guest) is bypassed.
-    const token = cookie.split("; ").filter((c) => c.includes("session_token")).join("; ");
+    const token = cookie
+      .split("; ")
+      .filter((c) => c.includes("session_token"))
+      .join("; ");
     const result = await requireAdmin(req(token));
     expect(result).toMatchObject({ ok: true, user: { id: userId } });
   });

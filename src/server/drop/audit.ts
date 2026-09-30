@@ -2,7 +2,7 @@ import type { Tx } from "../db/client";
 import { auditLog } from "../db/schema";
 
 export type AuditInput = {
-  entity: "hold" | "order" | "waitlist" | "payment";
+  entity: "hold" | "order" | "waitlist" | "payment" | "webhook";
   entityId: string;
   dropId?: string | null;
   userId?: string | null;

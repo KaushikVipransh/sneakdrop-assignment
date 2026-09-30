@@ -46,7 +46,20 @@ export async function applyPaymentEvent(
       .select({ eventId: webhookEvents.eventId })
       .from(webhookEvents)
       .where(eq(webhookEvents.eventId, event.id));
-    if (seen) return { code: "DUPLICATE" };
+    const logReceipt = (outcome: string) =>
+      audit(tx, {
+        entity: "webhook",
+        entityId: event.id,
+        dropId: drop.id,
+        to: outcome,
+        meta: { type: event.type, intentId },
+        at: now,
+      });
+    if (seen) {
+      // Recorded so the admin view can show that a duplicate arrived and was ignored.
+      await logReceipt("duplicate");
+      return { code: "DUPLICATE" };
+    }
 
     const [intent] = await tx
       .select()
@@ -153,6 +166,7 @@ export async function applyPaymentEvent(
       receivedAt: now,
       outcome,
     });
+    await logReceipt(outcome);
     return { code: "PROCESSED", outcome };
   });
 }
