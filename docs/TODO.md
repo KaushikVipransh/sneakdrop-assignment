@@ -41,7 +41,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: migration applies; duplicate `hold_id` insert fails (test).
 - [x] **T10. Schema: `audit_log`.** `id`, `entity`, `entity_id`, `from_status`, `to_status`, `meta` jsonb, `at`.
   Done when: migration applies.
-- [ ] **T11. Seed script.** `pnpm db:seed` creates one drop with 20 pairs, `starts_at = now()`. `pnpm db:reset` truncates and reseeds.
+- [x] **T11. Seed script.** `pnpm db:seed` creates one drop with 20 pairs, `starts_at = now()`. `pnpm db:reset` truncates and reseeds.
   Done when: both commands run twice in a row without error.
 - [x] **T12. Test DB harness.** Vitest global setup: use a separate `sneakdrop_test` DB, run migrations, truncate between tests.
   Done when: a DB test passes and leaves no rows behind.
