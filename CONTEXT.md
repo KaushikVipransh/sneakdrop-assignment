@@ -46,5 +46,7 @@ TypeScript · Next.js 16 App Router (UI + Route Handlers) · Tailwind v4 + shadc
 
 ## Current status
 
-- 2026-09-30: Planning done. PRD, tech stack, design, TODO written and committed. No code yet.
-- **Next task: T01 (scaffold Next.js app).**
+- 2026-09-30: Planning done. PRD, tech stack, design, TODO written and committed.
+- 2026-09-30: M0 + M1 done (T01–T20). Schema for drops/holds/orders/audit_log, `inDropTx` (lock → DB clock → reconcile → action → invariant), createHold/releaseHold, 1,000-user concurrency test.
+- Docker Desktop is broken on this machine; `pnpm db:local` runs Postgres 17 from npm binaries on the same port/credentials.
+- **Next task: T21.**
