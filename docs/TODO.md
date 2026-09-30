@@ -66,11 +66,11 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
 
 - [x] **T21. Schema: `waitlist_entries`.** `id`, `drop_id`, `user_id`, `status` enum (`WAITING`, `PROMOTED`, `LEFT`, `SKIPPED`), `created_at`, `ended_at`. Partial unique `(drop_id, user_id) WHERE status = 'WAITING'`. Index `(drop_id, status, created_at)`.
   Done when: migration applies.
-- [ ] **T22. `joinWaitlist(userId, dropId)`.** Lock, reconcile. Allowed only if `available = 0`, user has no active hold, user under limit. Idempotent: returns existing entry.
+- [x] **T22. `joinWaitlist(userId, dropId)`.** Lock, reconcile. Allowed only if `available = 0`, user has no active hold, user under limit. Idempotent: returns existing entry.
   Done when: tests for each rejection and for idempotency.
-- [ ] **T23. `leaveWaitlist(userId, dropId)`.** Sets `LEFT`.
+- [x] **T23. `leaveWaitlist(userId, dropId)`.** Sets `LEFT`.
   Done when: test passes.
-- [ ] **T24. `getWaitlistPosition(tx, dropId, userId)`.** 1-based count of `WAITING` entries created before the user's (tie-break by `id`).
+- [x] **T24. `getWaitlistPosition(tx, dropId, userId)`.** 1-based count of `WAITING` entries created before the user's (tie-break by `id`).
   Done when: test with 5 users returns 1..5; after #2 leaves, #3 becomes 2.
 - [ ] **T25. Promotion inside `reconcile`.** After expiry, while `available ≥ 1` and queue non-empty: take first `WAITING`; if user ineligible (has 2 pairs or active hold) mark `SKIPPED` and continue; else mark `PROMOTED` and create hold `source = waitlist`, `expires_at = now + hold_seconds`.
   Done when: tests: expiry promotes first user with fresh 5 min; ineligible user skipped; empty queue returns pair to stock.
