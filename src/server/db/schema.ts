@@ -2,7 +2,9 @@ import { sql } from "drizzle-orm";
 import {
   check,
   index,
+  bigserial,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   text,
@@ -86,3 +88,25 @@ export const orders = pgTable(
 );
 
 export type Order = typeof orders.$inferSelect;
+
+/** Append-only record of every state transition, used for debugging and the receipt log. */
+export const auditLog = pgTable(
+  "audit_log",
+  {
+    id: bigserial("id", { mode: "number" }).primaryKey(),
+    entity: text("entity").notNull(),
+    entityId: text("entity_id").notNull(),
+    dropId: uuid("drop_id"),
+    userId: text("user_id"),
+    fromStatus: text("from_status"),
+    toStatus: text("to_status").notNull(),
+    meta: jsonb("meta").$type<Record<string, unknown>>(),
+    at: timestamp("at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("audit_log_user_at").on(t.userId, t.at),
+    index("audit_log_entity").on(t.entity, t.entityId),
+  ],
+);
+
+export type AuditEntry = typeof auditLog.$inferSelect;

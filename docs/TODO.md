@@ -39,7 +39,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: migration applies; inserting two ACTIVE holds for one user fails with unique violation (test).
 - [x] **T09. Schema: `orders`.** `id`, `drop_id`, `user_id`, `hold_id` (unique), `created_at`.
   Done when: migration applies; duplicate `hold_id` insert fails (test).
-- [ ] **T10. Schema: `audit_log`.** `id`, `entity`, `entity_id`, `from_status`, `to_status`, `meta` jsonb, `at`.
+- [x] **T10. Schema: `audit_log`.** `id`, `entity`, `entity_id`, `from_status`, `to_status`, `meta` jsonb, `at`.
   Done when: migration applies.
 - [ ] **T11. Seed script.** `pnpm db:seed` creates one drop with 20 pairs, `starts_at = now()`. `pnpm db:reset` truncates and reseeds.
   Done when: both commands run twice in a row without error.
