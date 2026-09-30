@@ -220,6 +220,15 @@ export function MainCard({ state, serverNow, pending, onAction, onExpire }: Prop
           actions={state.soldOut ? primary("join", "Join the line") : primary("buy", "Buy")}
         />
       );
+    case "payment-failed":
+      return (
+        <Frame
+          label="Payment failed"
+          headline={<H className="text-danger">Payment failed</H>}
+          body="The provider declined it, so your hold ended and the pair went back. You were not charged."
+          actions={state.soldOut ? primary("join", "Join the line") : primary("buy", "Try again")}
+        />
+      );
     case "late-payment":
       return (
         <Frame

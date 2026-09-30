@@ -57,6 +57,13 @@ function status(me: Partial<Me> | null, drop: Partial<DropStatus["drop"]> = {}):
 
 describe("deriveCardState", () => {
   const cases: [string, DropStatus][] = [
+    [
+      "payment-failed",
+      status({
+        latestHold: hold({ status: "RELEASED", endedAt: iso(-1000) }),
+        payment: { id: "p", status: "FAILED" },
+      }),
+    ],
     ["pre-sale", status({}, { startsAt: iso(60_000) })],
     ["available", status({})],
     ["holding", status({ hold: hold(), latestHold: hold() })],
@@ -102,9 +109,20 @@ describe("deriveCardState", () => {
     ],
   ];
 
-  it("covers all 12 states", () => {
+  it("says so when the payment failed and the pair went back", () => {
+    const s = status(
+      {
+        latestHold: hold({ status: "RELEASED", endedAt: iso(-1000) }),
+        payment: { id: "p", status: "FAILED" },
+      },
+      { available: 0 },
+    );
+    expect(deriveCardState(s, NOW)).toEqual({ kind: "payment-failed", soldOut: true });
+  });
+
+  it("covers all 13 states", () => {
     expect(new Set(cases.map(([kind]) => kind))).toEqual(new Set(CARD_STATES));
-    expect(CARD_STATES).toHaveLength(12);
+    expect(CARD_STATES).toHaveLength(13);
   });
 
   for (const [kind, s] of cases) {

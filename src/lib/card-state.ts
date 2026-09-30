@@ -1,6 +1,6 @@
 import type { DropStatus, StatusHold } from "./status";
 
-/** The main card's 12 states (DESIGN.md §3.3). */
+/** The main card's states: the 12 from DESIGN.md §3.3 plus payment-failed. */
 export const CARD_STATES = [
   "pre-sale",
   "available",
@@ -14,6 +14,7 @@ export const CARD_STATES = [
   "promoted",
   "expired",
   "late-payment",
+  "payment-failed",
 ] as const;
 
 export type CardKind = (typeof CARD_STATES)[number];
@@ -35,7 +36,8 @@ export type CardState =
   | { kind: "sold-out" }
   | { kind: "in-line"; position: number }
   | { kind: "expired"; soldOut: boolean }
-  | { kind: "late-payment"; soldOut: boolean };
+  | { kind: "late-payment"; soldOut: boolean }
+  | { kind: "payment-failed"; soldOut: boolean };
 
 const LAST_MINUTE_MS = 60_000;
 
@@ -71,6 +73,9 @@ export function deriveCardState(status: DropStatus, now: number): CardState {
 
   const latest = me.latestHold;
   if (latest && me.payment?.status === "REFUNDED") return { kind: "late-payment", soldOut };
+  if (latest?.status === "RELEASED" && me.payment?.status === "FAILED") {
+    return { kind: "payment-failed", soldOut };
+  }
   if (latest?.status === "CONVERTED") {
     const lastOrder = me.orders.at(-1);
     return {

@@ -43,6 +43,7 @@ const states: [CardState, RegExp, string[]][] = [
   ],
   [{ kind: "expired", soldOut: true }, /Time's up/, ["Join the line"]],
   [{ kind: "late-payment", soldOut: false }, /Payment too late — refunded/, ["Buy"]],
+  [{ kind: "payment-failed", soldOut: false }, /declined it/, ["Try again"]],
 ];
 
 describe("MainCard", () => {
