@@ -50,4 +50,5 @@ TypeScript · Next.js 16 App Router (UI + Route Handlers) · Tailwind v4 + shadc
 - 2026-09-30: M0 + M1 done (T01–T20). Schema for drops/holds/orders/audit_log, `inDropTx` (lock → DB clock → reconcile → action → invariant), createHold/releaseHold, 1,000-user concurrency test.
 - Docker Desktop is broken on this machine; `pnpm db:local` runs Postgres 17 from npm binaries on the same port/credentials.
 - 2026-09-30: M2 + M3 done (T21–T38). Waitlist + promotion, fast-check property test, fake provider outbox + dispatcher, signed webhook route, chaos e2e tests. 92 tests.
-- **Next task: T39.**
+- 2026-09-30: M4 done (T39–T54). Better Auth guest + magic link, API routes, status route, cron route, Ledger UI (12 card states), Playwright e2e + axe (`pnpm e2e`, needs `pnpm dev`).
+- **Next task: T55.**

@@ -144,7 +144,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: manual run: full happy path works in the browser.
 - [x] **T53. Receipt log.** Show user's audit events (add `GET /api/me/events` or include in status).
   Done when: events appear in order during a manual run.
-- [ ] **T54. Accessibility + responsive pass.** Keyboard, focus rings, contrast, `prefers-reduced-motion`, 375 / 768 / 1280 px.
+- [x] **T54. Accessibility + responsive pass.** Keyboard, focus rings, contrast, `prefers-reduced-motion`, 375 / 768 / 1280 px.
   Done when: axe (or Lighthouse a11y) shows no errors; no horizontal scroll at 375 px.
 
 ## M5 — Admin, load test, CI
