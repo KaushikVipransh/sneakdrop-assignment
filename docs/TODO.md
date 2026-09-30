@@ -78,7 +78,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: test passes.
 - [x] **T27. Release triggers promotion.** `releaseHold` runs reconcile after release in the same tx.
   Done when: test: release → first waiter gets hold immediately.
-- [ ] **T28. Randomised invariant test.** fast-check: random sequences of buy / release / expire (advance clock) / join / leave across 50 users.
+- [x] **T28. Randomised invariant test.** fast-check: random sequences of buy / release / expire (advance clock) / join / leave across 50 users.
   Done when: invariant never breaks over 500 runs; per-user limits never exceeded.
 
 ## M3 — Fake payment provider and webhooks
