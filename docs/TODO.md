@@ -140,7 +140,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: renders; no layout shift at 375 px.
 - [x] **T51. Main card state machine.** Pure function `deriveCardState(status)` → one of 12 states (DESIGN.md §3.3) + card UI for each.
   Done when: unit test covers all 12 states.
-- [ ] **T52. Wire actions.** Buy, Pay, Release, Join, Leave buttons call routes, optimistic loading, toast on error, refetch on success.
+- [x] **T52. Wire actions.** Buy, Pay, Release, Join, Leave buttons call routes, optimistic loading, toast on error, refetch on success.
   Done when: manual run: full happy path works in the browser.
 - [ ] **T53. Receipt log.** Show user's audit events (add `GET /api/me/events` or include in status).
   Done when: events appear in order during a manual run.

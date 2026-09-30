@@ -4,6 +4,7 @@ export default defineConfig({
   resolve: { tsconfigPaths: true },
   test: {
     include: ["src/**/*.test.ts", "src/**/*.test.tsx", "tests/**/*.test.ts"],
+    exclude: ["e2e/**", "node_modules/**"],
     environment: "node",
     setupFiles: ["./vitest.setup.ts"],
     globalSetup: ["./vitest.global-setup.ts"],

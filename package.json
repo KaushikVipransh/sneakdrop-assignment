@@ -18,7 +18,8 @@
     "db:seed": "tsx scripts/seed.ts",
     "db:reset": "tsx scripts/seed.ts --reset",
     "db:local:stop": "tsx scripts/local-db.ts --stop",
-    "dev:cron": "tsx scripts/dev-cron.ts"
+    "dev:cron": "tsx scripts/dev-cron.ts",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.0",
