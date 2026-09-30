@@ -18,7 +18,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
 
 ## M0 — Project setup
 
-- [ ] **T01. Scaffold Next.js app.** `create-next-app` refuses a non-empty folder (`README.md`, `notes.md`, `src/` conflict). Scaffold into a temp folder (`pnpm create next-app@latest ../sneakdrop-tmp` with TypeScript, App Router, Tailwind, ESLint, `src/` dir, alias `@/*`), then move its files into the repo root. Keep existing `README.md`, `notes.md`, `.gitignore` (merge any new entries), `docs/`, `CONTEXT.md`, `CLAUDE.md`. Delete the empty `src/.gitkeep`.
+- [x] **T01. Scaffold Next.js app.** `create-next-app` refuses a non-empty folder (`README.md`, `notes.md`, `src/` conflict). Scaffold into a temp folder (`pnpm create next-app@latest ../sneakdrop-tmp` with TypeScript, App Router, Tailwind, ESLint, `src/` dir, alias `@/*`), then move its files into the repo root. Keep existing `README.md`, `notes.md`, `.gitignore` (merge any new entries), `docs/`, `CONTEXT.md`, `CLAUDE.md`. Delete the empty `src/.gitkeep`.
   Done when: `pnpm dev` serves the default page at `http://localhost:3000`.
 - [ ] **T02. Strict TypeScript + scripts.** Enable `strict`, `noUncheckedIndexedAccess`. Add scripts: `typecheck` (`tsc --noEmit`), `lint`, `format` (Prettier), `test` (Vitest).
   Done when: `pnpm typecheck && pnpm lint` pass.

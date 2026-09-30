@@ -37,3 +37,13 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Next.js / tooling
+.pnp
+.pnp.*
+/coverage
+*.pem
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+.superpowers/
