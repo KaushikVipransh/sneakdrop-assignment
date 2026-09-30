@@ -116,7 +116,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
 
 - [x] **T39. Better Auth setup.** Install, configure with Drizzle adapter + Postgres, generate its tables, mount `/api/auth/[...all]`. Enable anonymous plugin.
   Done when: visiting the app creates a guest session; `user` row exists.
-- [ ] **T40. Magic link (optional path).** Resend provider, `RESEND_API_KEY` optional in env; in dev, log the link to console.
+- [x] **T40. Magic link (optional path).** Resend provider, `RESEND_API_KEY` optional in env; in dev, log the link to console.
   Done when: sign-in link works locally; anonymous user links to email account.
 - [ ] **T41. `requireUser()` helper.** Returns user or 401 for route handlers.
   Done when: test passes.
