@@ -83,7 +83,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
 
 ## M3 — Fake payment provider and webhooks
 
-- [ ] **T29. Schema: `payment_intents`.** `id`, `hold_id`, `user_id`, `status` enum (`PENDING`, `SUCCEEDED`, `FAILED`, `REFUNDED`), `amount`, `created_at`, `updated_at`.
+- [x] **T29. Schema: `payment_intents`.** `id`, `hold_id`, `user_id`, `status` enum (`PENDING`, `SUCCEEDED`, `FAILED`, `REFUNDED`), `amount`, `created_at`, `updated_at`.
   Done when: migration applies.
 - [x] **T30. Schema: `webhook_events`.** `event_id` PK, `type`, `intent_id`, `payload` jsonb, `received_at`, `outcome` text.
   Done when: migration applies.
