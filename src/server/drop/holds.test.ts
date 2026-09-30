@@ -3,7 +3,7 @@ import { db } from "@/server/db/client";
 import { auditLog, holds } from "@/server/db/schema";
 import { createDrop, insertHold, insertOrder } from "@/test/factories";
 import { resetDb } from "@/test/db";
-import { createHold } from "./holds";
+import { createHold, releaseHold } from "./holds";
 
 describe("createHold", () => {
   beforeEach(resetDb);
@@ -65,5 +65,41 @@ describe("createHold", () => {
     const startsAt = new Date(Date.now() + 60_000);
     const drop = await createDrop({ startsAt });
     expect(await createHold("u1", drop.id)).toMatchObject({ code: "NOT_STARTED", startsAt });
+  });
+});
+
+describe("releaseHold", () => {
+  beforeEach(resetDb);
+  afterAll(resetDb);
+
+  it("lets the owner release an active hold and returns the pair to stock", async () => {
+    const drop = await createDrop({ totalStock: 1 });
+    const created = await createHold("u1", drop.id);
+    if (created.code !== "HOLD_CREATED") throw new Error(created.code);
+
+    const result = await releaseHold("u1", created.hold.id);
+    expect(result).toMatchObject({ code: "RELEASED", hold: { status: "RELEASED" } });
+    expect((await createHold("u2", drop.id)).code).toBe("HOLD_CREATED");
+  });
+
+  it("hides other users' holds as NOT_FOUND", async () => {
+    const drop = await createDrop();
+    const hold = await insertHold(drop, "owner");
+    expect(await releaseHold("intruder", hold.id)).toEqual({ code: "NOT_FOUND" });
+    expect(await releaseHold("u1", "00000000-0000-0000-0000-000000000000")).toEqual({
+      code: "NOT_FOUND",
+    });
+  });
+
+  it("refuses a hold that is already terminal", async () => {
+    const drop = await createDrop();
+    const hold = await insertHold(drop, "u1", { status: "CONVERTED", endedAt: new Date() });
+    expect(await releaseHold("u1", hold.id)).toEqual({ code: "NOT_ACTIVE", status: "CONVERTED" });
+  });
+
+  it("treats a hold past its expiry as expired, not releasable", async () => {
+    const drop = await createDrop();
+    const hold = await insertHold(drop, "u1", { expiresAt: new Date(Date.now() - 1000) });
+    expect(await releaseHold("u1", hold.id)).toEqual({ code: "NOT_ACTIVE", status: "EXPIRED" });
   });
 });
