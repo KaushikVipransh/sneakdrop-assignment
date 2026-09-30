@@ -64,3 +64,25 @@ export const holds = pgTable(
 
 export type Hold = typeof holds.$inferSelect;
 export type HoldStatus = Hold["status"];
+
+/** A confirmed purchase. Exactly one per converted hold. */
+export const orders = pgTable(
+  "orders",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    dropId: uuid("drop_id")
+      .notNull()
+      .references(() => drops.id, { onDelete: "cascade" }),
+    userId: text("user_id").notNull(),
+    holdId: uuid("hold_id")
+      .notNull()
+      .references(() => holds.id, { onDelete: "cascade" }),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    uniqueIndex("orders_hold_unique").on(t.holdId),
+    index("orders_drop_user").on(t.dropId, t.userId),
+  ],
+);
+
+export type Order = typeof orders.$inferSelect;

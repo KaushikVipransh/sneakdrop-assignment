@@ -37,7 +37,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: migration generates and applies cleanly.
 - [x] **T08. Schema: `holds`.** `id`, `drop_id`, `user_id`, `status` enum (`ACTIVE`, `CONVERTED`, `EXPIRED`, `RELEASED`), `source` enum (`buy`, `waitlist`), `created_at`, `expires_at`, `ended_at`. Partial unique index `(drop_id, user_id) WHERE status = 'ACTIVE'`.
   Done when: migration applies; inserting two ACTIVE holds for one user fails with unique violation (test).
-- [ ] **T09. Schema: `orders`.** `id`, `drop_id`, `user_id`, `hold_id` (unique), `created_at`.
+- [x] **T09. Schema: `orders`.** `id`, `drop_id`, `user_id`, `hold_id` (unique), `created_at`.
   Done when: migration applies; duplicate `hold_id` insert fails (test).
 - [ ] **T10. Schema: `audit_log`.** `id`, `entity`, `entity_id`, `from_status`, `to_status`, `meta` jsonb, `at`.
   Done when: migration applies.

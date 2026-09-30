@@ -15,6 +15,13 @@
       "when": 1790780359812,
       "tag": "0001_holds",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790780423032,
+      "tag": "0002_orders",
+      "breakpoints": true
     }
   ]
 }
