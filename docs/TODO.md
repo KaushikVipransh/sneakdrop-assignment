@@ -91,7 +91,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: migration applies; seed inserts default settings (all zero chaos).
 - [x] **T32. HMAC signing util.** `sign(payload, secret)` and `verify(header, payload, secret)` with timestamp + constant-time compare. Add `WEBHOOK_SECRET` to env schema.
   Done when: tests for valid, tampered, and stale signatures.
-- [ ] **T33. `fakepay.createIntent(holdId)`.** Writes intent and schedules deliveries per chaos settings (success or fail by `fail_rate`; extra copies by `duplicate_rate`; opposite event after success by `reorder_rate`; random delay in range). Chaos RNG injectable for tests.
+- [x] **T33. `fakepay.createIntent(holdId)`.** Writes intent and schedules deliveries per chaos settings (success or fail by `fail_rate`; extra copies by `duplicate_rate`; opposite event after success by `reorder_rate`; random delay in range). Chaos RNG injectable for tests.
   Done when: tests with fixed seed produce expected delivery rows.
 - [ ] **T34. `startPayment(userId, holdId)`.** Owner + ACTIVE + not expired + no existing PENDING intent; creates intent via fakepay. Idempotent.
   Done when: tests pass.
