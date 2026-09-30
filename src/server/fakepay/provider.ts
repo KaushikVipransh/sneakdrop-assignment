@@ -15,18 +15,14 @@ import {
   type Hold,
   type PaymentIntent,
 } from "../db/schema";
+import type { z } from "zod";
+import type { paymentEventSchema } from "./events";
 import type { Rng } from "./rng";
 
 export const PRICE_CENTS = 18_000;
 
-export type PaymentEventType = "payment.succeeded" | "payment.failed";
-
-export type PaymentEventPayload = {
-  id: string;
-  type: PaymentEventType;
-  created_at: string;
-  data: { intent_id: string; hold_id: string; amount: number };
-};
+export type PaymentEventPayload = z.infer<typeof paymentEventSchema>;
+export type PaymentEventType = PaymentEventPayload["type"];
 
 export type CreateIntentOptions = { now: Date; rng?: Rng };
 

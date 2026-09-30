@@ -101,7 +101,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   - failed + intent PENDING → intent `FAILED`, hold `RELEASED`, reconcile (promotion);
   - failed + intent already SUCCEEDED → outcome `ignored_out_of_order`.
   Done when: unit test for every branch.
-- [ ] **T36. Webhook route.** `POST /api/webhooks/payments`: verify signature (401 on fail), Zod-parse body, call `applyPaymentEvent`, return 200 for handled/duplicate/ignored.
+- [x] **T36. Webhook route.** `POST /api/webhooks/payments`: verify signature (401 on fail), Zod-parse body, call `applyPaymentEvent`, return 200 for handled/duplicate/ignored.
   Done when: route tests for 401, 200 duplicate, 200 success.
 - [ ] **T37. Dispatcher.** `fakepay.dispatchDue(limit)`: claims due `PENDING` deliveries (`FOR UPDATE SKIP LOCKED`), POSTs signed payload to the webhook URL, marks `DELIVERED` or retries with backoff (max 5, then `DEAD`).
   Done when: integration test with app server: delivery reaches webhook and is marked DELIVERED.
