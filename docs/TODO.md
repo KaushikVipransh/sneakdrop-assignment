@@ -174,7 +174,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: PASS, invariant green in admin.
 - [x] **T65. NOTES.md.** Rename `notes.md` to `NOTES.md` (Windows is case-insensitive: `git mv notes.md tmp.md && git mv tmp.md NOTES.md`). Fill in: requirements (Node, pnpm, Docker), env vars, how to run, how to test, how to run load test, design decisions, assumptions (PRD §12), live URL.
   Done when: fresh clone following NOTES.md runs in < 5 minutes.
-- [ ] **T66. Final review.** Re-read README rules 1–5 and tick each against code + tests. Run `/code-review`.
+- [x] **T66. Final review.** Re-read README rules 1–5 and tick each against code + tests. Run `/code-review`.
   Done when: every rule mapped to a test; no open review findings.
 - [ ] **T67. Screen recording.** Show: rules overview, load test PASS, duplicate webhook, late webhook refund, waitlist promotion, admin invariant.
   Done when: Loom link added to NOTES.md.
