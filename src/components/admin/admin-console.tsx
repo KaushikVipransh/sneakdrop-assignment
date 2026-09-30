@@ -111,7 +111,7 @@ export function AdminConsole({ email }: { email: string }) {
     <>
       <SiteHeader
         wide
-        title="SNEAKER DROP / ADMIN"
+        title="Sneaker Drop / Admin"
         phase={drop && drop.sold >= drop.total ? "ended" : "live"}
         startsAt={new Date()}
         account={<span className="hidden text-sm text-text-muted sm:inline">{email}</span>}

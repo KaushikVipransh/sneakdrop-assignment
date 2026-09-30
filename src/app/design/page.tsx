@@ -24,7 +24,7 @@ function Swatches() {
       {COLORS.map((name) => (
         <div key={name} className="flex items-center gap-3">
           <span
-            className="size-8 shrink-0 rounded-[var(--radius-square)] border border-border"
+            className="size-8 shrink-0 rounded-[6px] border border-border"
             style={{ background: `var(--${name})` }}
           />
           <span className="num text-[13px] text-text-muted">--{name}</span>
@@ -50,10 +50,10 @@ function Specimen() {
       <p className="text-accent-text">Orange as text uses --accent-text.</p>
       <p className="text-success">It&apos;s yours.</p>
       <div className="flex gap-2">
-        <span className="hatch size-6 rounded-[var(--radius-square)]" />
-        <span className="size-6 rounded-[var(--radius-square)] bg-accent" />
-        <span className="size-6 rounded-[var(--radius-square)] bg-text" />
-        <span className="size-6 rounded-[var(--radius-square)] border border-border bg-surface-muted" />
+        <span className="hatch size-6 rounded-[6px]" />
+        <span className="size-6 rounded-[6px] bg-accent" />
+        <span className="size-6 rounded-[6px] bg-text" />
+        <span className="size-6 rounded-[6px] border border-border bg-surface-muted" />
       </div>
       <Card className="space-y-4">
         <p className="label">Your hold</p>

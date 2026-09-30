@@ -2,6 +2,8 @@
 
 Companion to [PRD.md](PRD.md) and [TECH_STACK.md](TECH_STACK.md). Scope for now: **minimal and modern**. One status page, one admin page, a small design system.
 
+> **Visual refresh (2026-10-01).** The shipped UI replaces the monochrome "Ledger" look with a gradient stage (peach → violet → ink) inside a lavender page, Outfit type, pill buttons, and white glass cards. The stock grid on the status page became an orbit of 20 pair-tiles around the "pairs left" number, with a floating "You" tag. One theme for all visitors. Behaviour, card states, copy, and accessibility rules below still apply.
+
 ---
 
 ## 1. Reference and direction

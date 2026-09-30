@@ -9,7 +9,7 @@ describe("SiteHeader", () => {
 
   it("shows LIVE with a pulsing orange dot", () => {
     const { container } = render(<SiteHeader phase="live" startsAt={new Date()} />);
-    expect(screen.getByText("SNEAKER DROP")).toBeDefined();
+    expect(screen.getByText("Sneaker Drop")).toBeDefined();
     expect(screen.getByTestId("phase").textContent).toBe("LIVE");
     expect(container.querySelector("[data-phase='live']")?.className).toContain("bg-accent");
   });

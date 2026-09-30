@@ -37,9 +37,13 @@ function Frame({
   return (
     <Card
       aria-labelledby="card-label"
-      className={cn("space-y-4", tone === "accent" && "border-accent")}
+      className={cn("space-y-4", tone === "accent" && "ring-2 ring-accent/70 ring-offset-0")}
     >
-      <p id="card-label" className="label">
+      <p id="card-label" className="label inline-flex items-center gap-2">
+        <span
+          aria-hidden
+          className={cn("size-2 rounded-full", tone === "accent" ? "bg-accent" : "bg-violet")}
+        />
         {label}
       </p>
       <div className="space-y-2">
@@ -56,7 +60,7 @@ function Frame({
 const H = ({ children, className }: { children: ReactNode; className?: string }) => (
   <h2
     className={cn(
-      "text-[32px] leading-[1.1] font-semibold tracking-[-0.02em] sm:text-[40px]",
+      "text-[28px] leading-[1.1] font-semibold tracking-[-0.02em] text-ink sm:text-[34px]",
       className,
     )}
   >

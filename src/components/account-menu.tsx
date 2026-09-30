@@ -28,13 +28,13 @@ export function AccountMenu({ email, isGuest }: Props) {
 
   return (
     <details className="group relative">
-      <summary className="flex h-11 cursor-pointer list-none items-center gap-1 rounded-[var(--radius-control)] px-2 text-sm text-text-muted hover:text-text [&::-webkit-details-marker]:hidden">
+      <summary className="flex h-10 cursor-pointer list-none items-center gap-1 rounded-full px-3 text-sm text-text-muted hover:bg-white/70 hover:text-ink [&::-webkit-details-marker]:hidden">
         <span className="max-w-[16ch] truncate">{isGuest ? "guest" : (email ?? "account")}</span>
         <span aria-hidden className="text-xs transition-transform group-open:rotate-180">
           ▾
         </span>
       </summary>
-      <div className="absolute right-0 z-20 mt-2 w-72 space-y-3 rounded-[var(--radius-card)] border border-border bg-surface p-4 text-sm">
+      <div className="glass absolute right-0 z-40 mt-3 w-[min(18rem,calc(100vw-2rem))] space-y-3 rounded-3xl p-4 text-sm shadow-xl">
         {isGuest ? (
           <form onSubmit={sendLink} className="space-y-3">
             <p className="text-text-muted">
@@ -48,7 +48,7 @@ export function AccountMenu({ email, isGuest }: Props) {
                 autoComplete="email"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                className="mt-1 h-11 w-full rounded-[var(--radius-control)] border border-border bg-surface-muted px-3 text-text"
+                className="mt-1 h-11 w-full rounded-full border border-border bg-white px-4 text-text"
               />
             </label>
             <Button

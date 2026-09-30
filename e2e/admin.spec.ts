@@ -24,8 +24,10 @@ test("non-admins are turned away", async ({ page }) => {
   await resetDrop(20);
   await page.goto("/");
   await expect(page.getByRole("button", { name: "Buy" })).toBeVisible();
-  const status = await page.evaluate(() => fetch("/api/admin/state").then((r) => r.status));
-  expect(status).toBe(403);
+  // Wait for the guest session, then the admin API must refuse it.
+  await expect
+    .poll(() => page.evaluate(() => fetch("/api/admin/state").then((r) => r.status)))
+    .toBe(403);
   await page.goto("/admin");
   await expect(page.getByRole("heading", { name: "Admins only" })).toBeVisible();
 });

@@ -6,7 +6,7 @@ import { Button } from "./button";
 describe("Button", () => {
   afterEach(cleanup);
 
-  it("renders the three variants with their token classes", () => {
+  it("renders the three pill variants with their token classes", () => {
     render(
       <>
         <Button>Buy</Button>
@@ -14,8 +14,8 @@ describe("Button", () => {
         <Button variant="ghost">Leave line</Button>
       </>,
     );
-    expect(screen.getByRole("button", { name: "Buy" }).className).toContain("bg-accent");
-    expect(screen.getByRole("button", { name: "Buy" }).className).toContain("text-on-accent");
+    expect(screen.getByRole("button", { name: "Buy" }).className).toContain("bg-ink");
+    expect(screen.getByRole("button", { name: "Buy" }).className).toContain("text-white");
     expect(screen.getByRole("button", { name: "Release" }).className).toContain("border");
     expect(screen.getByRole("button", { name: "Leave line" }).className).toContain(
       "bg-transparent",

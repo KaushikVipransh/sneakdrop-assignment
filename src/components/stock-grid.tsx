@@ -61,7 +61,7 @@ export function StockGrid({
             key={`${i}-${state}`}
             data-state={state}
             className={cn(
-              "relative aspect-square rounded-[var(--radius-square)] transition-colors duration-[600ms] ease-[var(--ease)]",
+              "relative aspect-square rounded-[4px] transition-colors duration-[600ms] ease-[var(--ease)]",
               STYLE[state],
             )}
           >

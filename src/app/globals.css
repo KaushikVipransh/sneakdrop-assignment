@@ -1,72 +1,30 @@
 @import "tailwindcss";
 
-/* "The Ledger" design tokens (docs/DESIGN.md §2). Light is the default. */
+/*
+ * One look for every visitor: a lavender page with a gradient "stage"
+ * (peach → violet → ink). Text on the light side of the stage is ink, on the
+ * dark side white; content that moves around (the action card) sits on white
+ * glass so its contrast never depends on where it lands.
+ */
 :root {
-  --bg: #fafaf9;
+  --bg: #ece8f8;
   --surface: #ffffff;
-  --surface-muted: #f2f2f0;
-  --border: #e4e4e2;
-  --text: #0a0a0a;
-  --text-muted: #6b6b6b;
-  --accent: #ff5a1f;
-  --accent-text: #c2410c;
-  --on-accent: #0a0a0a;
+  --surface-muted: #f3effc;
+  --border: #ddd5f3;
+  --text: #140f2e;
+  --text-muted: #57507a;
+  --ink: #0c0a1d;
+  --violet: #7c4dde;
+  --violet-soft: #b999f5;
+  --peach: #fde2c4;
+  --accent: #ff6a2b;
+  --accent-text: #b23c0a;
+  --on-accent: #140f2e;
   --success: #15803d;
   --danger: #b91c1c;
 
   --ease: cubic-bezier(0.2, 0, 0, 1);
-  --dur-fast: 150ms;
-  --dur-state: 250ms;
-  --dur-fill: 600ms;
 
-  color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0a0a0a;
-    --surface: #141414;
-    --surface-muted: #1c1c1c;
-    --border: #262626;
-    --text: #f5f5f4;
-    --text-muted: #a3a3a3;
-    --accent: #ff6a33;
-    --accent-text: #ff8a5b;
-    --on-accent: #0a0a0a;
-    --success: #4ade80;
-    --danger: #f87171;
-    color-scheme: dark;
-  }
-}
-
-/* Explicit theme, used by the /design token page to show both themes side by side. */
-[data-theme="dark"] {
-  --bg: #0a0a0a;
-  --surface: #141414;
-  --surface-muted: #1c1c1c;
-  --border: #262626;
-  --text: #f5f5f4;
-  --text-muted: #a3a3a3;
-  --accent: #ff6a33;
-  --accent-text: #ff8a5b;
-  --on-accent: #0a0a0a;
-  --success: #4ade80;
-  --danger: #f87171;
-  color-scheme: dark;
-}
-
-[data-theme="light"] {
-  --bg: #fafaf9;
-  --surface: #ffffff;
-  --surface-muted: #f2f2f0;
-  --border: #e4e4e2;
-  --text: #0a0a0a;
-  --text-muted: #6b6b6b;
-  --accent: #ff5a1f;
-  --accent-text: #c2410c;
-  --on-accent: #0a0a0a;
-  --success: #15803d;
-  --danger: #b91c1c;
   color-scheme: light;
 }
 
@@ -77,18 +35,22 @@
   --color-border: var(--border);
   --color-text: var(--text);
   --color-text-muted: var(--text-muted);
+  --color-ink: var(--ink);
+  --color-violet: var(--violet);
+  --color-violet-soft: var(--violet-soft);
+  --color-peach: var(--peach);
   --color-accent: var(--accent);
   --color-accent-text: var(--accent-text);
   --color-on-accent: var(--on-accent);
   --color-success: var(--success);
   --color-danger: var(--danger);
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  --radius-card: 12px;
-  --radius-control: 8px;
-  --radius-square: 4px;
+  --radius-card: 24px;
+  --radius-control: 999px;
+  --radius-square: 10px;
 
   --ease-ledger: var(--ease);
 }
@@ -99,28 +61,28 @@
   }
 
   body {
-    background: var(--bg);
+    background:
+      radial-gradient(60rem 40rem at 10% -10%, #f7e7f3 0%, transparent 60%),
+      radial-gradient(50rem 40rem at 110% 10%, #d9cff7 0%, transparent 60%), var(--bg);
     color: var(--text);
     font-family: var(--font-sans);
     font-size: 16px;
     line-height: 1.5;
   }
 
-  /* Visible focus ring everywhere: 2px --text with 2px offset (DESIGN.md §7). */
   :focus-visible {
-    outline: 2px solid var(--text);
-    outline-offset: 2px;
+    outline: 2px solid var(--violet);
+    outline-offset: 3px;
   }
 }
 
 @layer components {
-  /* Uppercase muted label (DESIGN.md §2.2). */
   .label {
     font-size: 13px;
     line-height: 1.4;
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     color: var(--text-muted);
   }
 
@@ -130,21 +92,69 @@
   }
 
   .display-number {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-variant-numeric: tabular-nums;
-    font-size: clamp(72px, 18vw, 160px);
+    font-size: clamp(56px, 12vw, 104px);
     line-height: 1;
     font-weight: 500;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.03em;
   }
 
-  /* Diagonal hatch for pairs held by other people: differs by pattern, not only colour. */
+  /* The gradient stage: left-to-right on wide screens, top-to-bottom on phones,
+     so the text column always sits on the light side. */
+  .stage {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+      radial-gradient(38rem 26rem at 0% 0%, var(--peach) 0%, transparent 70%),
+      linear-gradient(180deg, #f3dcd6 0%, #cdb5f6 30%, #8f63e8 55%, #3a1f78 78%, var(--ink) 100%);
+  }
+
+  @media (min-width: 1024px) {
+    .stage {
+      background:
+        radial-gradient(40rem 30rem at 0% 0%, var(--peach) 0%, transparent 70%),
+        linear-gradient(
+          112deg,
+          #f6e0cf 0%,
+          #d9c4fa 28%,
+          #a47ef0 48%,
+          #5b35b8 64%,
+          #1f1446 80%,
+          var(--ink) 100%
+        );
+    }
+  }
+
+  /* Darkens the bottom of the stage so the stats row always reads in white. */
+  .stage-floor {
+    background: linear-gradient(
+      to top,
+      rgb(12 10 29 / 0.92),
+      rgb(12 10 29 / 0.55) 60%,
+      transparent
+    );
+  }
+
+  .glass {
+    background: rgb(255 255 255 / 0.72);
+    border: 1px solid rgb(255 255 255 / 0.8);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .orbit-ring {
+    border: 1px solid rgb(255 255 255 / 0.22);
+  }
+
+  /* Pairs held by other people: soft violet, with a stripe so it differs by pattern too. */
   .hatch {
-    background-color: color-mix(in srgb, var(--text-muted) 40%, transparent);
+    background-color: rgb(185 153 245 / 0.55);
     background-image: repeating-linear-gradient(
       135deg,
-      transparent 0 3px,
-      color-mix(in srgb, var(--text) 35%, transparent) 3px 4px
+      transparent 0 4px,
+      rgb(255 255 255 / 0.35) 4px 5px
     );
   }
 
@@ -169,11 +179,20 @@
     transform: scale(1);
   }
   50% {
-    transform: scale(1.08);
+    transform: scale(1.12);
   }
 }
 
 @keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: rotate(0deg);
+  }
   to {
     transform: rotate(360deg);
   }
@@ -184,11 +203,15 @@
 }
 
 .animate-own {
-  animation: own-pulse var(--dur-fill) var(--ease) 1;
+  animation: own-pulse 600ms var(--ease) 1;
 }
 
 .animate-spin-slow {
   animation: spin 900ms linear infinite;
+}
+
+.animate-drift {
+  animation: drift 120s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
