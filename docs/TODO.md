@@ -45,7 +45,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: both commands run twice in a row without error.
 - [x] **T12. Test DB harness.** Vitest global setup: use a separate `sneakdrop_test` DB, run migrations, truncate between tests.
   Done when: a DB test passes and leaves no rows behind.
-- [ ] **T13. `lockDrop(tx, dropId)`.** `SELECT … FOR UPDATE` on the drop row; returns drop or throws `DropNotFound`.
+- [x] **T13. `lockDrop(tx, dropId)`.** `SELECT … FOR UPDATE` on the drop row; returns drop or throws `DropNotFound`.
   Done when: unit test passes.
 - [ ] **T14. `getCounts(tx, dropId)`.** Returns `{ total, sold, held, available }` computed from rows (no stored counter).
   Done when: test with seeded holds/orders returns correct numbers.
