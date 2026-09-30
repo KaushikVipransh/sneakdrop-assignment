@@ -7,6 +7,7 @@ import {
   jsonb,
   pgEnum,
   pgTable,
+  real,
   text,
   timestamp,
   uniqueIndex,
@@ -137,3 +138,112 @@ export const auditLog = pgTable(
 );
 
 export type AuditEntry = typeof auditLog.$inferSelect;
+
+export const paymentStatus = pgEnum("payment_status", [
+  "PENDING",
+  "SUCCEEDED",
+  "FAILED",
+  "REFUNDED",
+]);
+
+/** A fake payment attempt for one hold. */
+export const paymentIntents = pgTable(
+  "payment_intents",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    holdId: uuid("hold_id")
+      .notNull()
+      .references(() => holds.id, { onDelete: "cascade" }),
+    dropId: uuid("drop_id")
+      .notNull()
+      .references(() => drops.id, { onDelete: "cascade" }),
+    userId: text("user_id").notNull(),
+    status: paymentStatus("status").notNull().default("PENDING"),
+    amount: integer("amount").notNull(),
+    createdAt: createdAt(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    // At most one in-flight payment per hold.
+    uniqueIndex("payment_intents_one_pending_per_hold")
+      .on(t.holdId)
+      .where(sql`${t.status} = 'PENDING'`),
+    index("payment_intents_hold").on(t.holdId),
+    index("payment_intents_drop_user").on(t.dropId, t.userId),
+  ],
+);
+
+export type PaymentIntent = typeof paymentIntents.$inferSelect;
+export type PaymentStatus = PaymentIntent["status"];
+
+/** Every webhook event we accepted. The primary key makes processing idempotent. */
+export const webhookEvents = pgTable(
+  "webhook_events",
+  {
+    eventId: text("event_id").primaryKey(),
+    type: text("type").notNull(),
+    intentId: uuid("intent_id").notNull(),
+    payload: jsonb("payload").$type<Record<string, unknown>>().notNull(),
+    receivedAt: timestamp("received_at", { withTimezone: true }).notNull().defaultNow(),
+    outcome: text("outcome").notNull(),
+  },
+  (t) => [
+    index("webhook_events_received").on(t.receivedAt),
+    index("webhook_events_intent").on(t.intentId),
+  ],
+);
+
+export type WebhookEvent = typeof webhookEvents.$inferSelect;
+
+export const deliveryStatus = pgEnum("fakepay_delivery_status", ["PENDING", "DELIVERED", "DEAD"]);
+
+/** Fake provider outbox: one row per scheduled webhook POST. */
+export const fakepayDeliveries = pgTable(
+  "fakepay_deliveries",
+  {
+    id: bigserial("id", { mode: "number" }).primaryKey(),
+    eventId: text("event_id").notNull(),
+    type: text("type").notNull(),
+    intentId: uuid("intent_id").notNull(),
+    payload: jsonb("payload").$type<Record<string, unknown>>().notNull(),
+    deliverAt: timestamp("deliver_at", { withTimezone: true }).notNull(),
+    attempts: integer("attempts").notNull().default(0),
+    status: deliveryStatus("status").notNull().default("PENDING"),
+    lastError: text("last_error"),
+    createdAt: createdAt(),
+    deliveredAt: timestamp("delivered_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("fakepay_deliveries_due").on(t.status, t.deliverAt),
+    index("fakepay_deliveries_intent").on(t.intentId),
+  ],
+);
+
+export type FakepayDelivery = typeof fakepayDeliveries.$inferSelect;
+
+/** Chaos knobs for the fake provider. A single row with id = 1. */
+export const fakepaySettings = pgTable(
+  "fakepay_settings",
+  {
+    id: integer("id").primaryKey().default(1),
+    minDelayMs: integer("min_delay_ms").notNull().default(0),
+    maxDelayMs: integer("max_delay_ms").notNull().default(0),
+    duplicateRate: real("duplicate_rate").notNull().default(0),
+    reorderRate: real("reorder_rate").notNull().default(0),
+    failRate: real("fail_rate").notNull().default(0),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    check("fakepay_settings_singleton", sql`${t.id} = 1`),
+    check(
+      "fakepay_settings_delay_range",
+      sql`0 <= ${t.minDelayMs} and ${t.minDelayMs} <= ${t.maxDelayMs}`,
+    ),
+    check(
+      "fakepay_settings_rates",
+      sql`${t.duplicateRate} between 0 and 1 and ${t.reorderRate} between 0 and 1 and ${t.failRate} between 0 and 1`,
+    ),
+  ],
+);
+
+export type FakepaySettings = typeof fakepaySettings.$inferSelect;

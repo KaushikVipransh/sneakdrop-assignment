@@ -36,6 +36,20 @@
       "when": 1790781139425,
       "tag": "0004_waitlist",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790781697461,
+      "tag": "0005_payment_intents",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790781746510,
+      "tag": "0006_webhooks_fakepay",
+      "breakpoints": true
     }
   ]
 }

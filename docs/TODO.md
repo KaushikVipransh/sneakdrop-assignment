@@ -85,9 +85,9 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
 
 - [ ] **T29. Schema: `payment_intents`.** `id`, `hold_id`, `user_id`, `status` enum (`PENDING`, `SUCCEEDED`, `FAILED`, `REFUNDED`), `amount`, `created_at`, `updated_at`.
   Done when: migration applies.
-- [ ] **T30. Schema: `webhook_events`.** `event_id` PK, `type`, `intent_id`, `payload` jsonb, `received_at`, `outcome` text.
+- [x] **T30. Schema: `webhook_events`.** `event_id` PK, `type`, `intent_id`, `payload` jsonb, `received_at`, `outcome` text.
   Done when: migration applies.
-- [ ] **T31. Schema: `fakepay_deliveries` + `fakepay_settings`.** Deliveries: `id`, `event_id`, `type`, `intent_id`, `payload`, `deliver_at`, `attempts`, `status` (`PENDING`, `DELIVERED`, `DEAD`), `last_error`. Settings: single row with `min_delay_ms`, `max_delay_ms`, `duplicate_rate`, `reorder_rate`, `fail_rate`.
+- [x] **T31. Schema: `fakepay_deliveries` + `fakepay_settings`.** Deliveries: `id`, `event_id`, `type`, `intent_id`, `payload`, `deliver_at`, `attempts`, `status` (`PENDING`, `DELIVERED`, `DEAD`), `last_error`. Settings: single row with `min_delay_ms`, `max_delay_ms`, `duplicate_rate`, `reorder_rate`, `fail_rate`.
   Done when: migration applies; seed inserts default settings (all zero chaos).
 - [ ] **T32. HMAC signing util.** `sign(payload, secret)` and `verify(header, payload, secret)` with timestamp + constant-time compare. Add `WEBHOOK_SECRET` to env schema.
   Done when: tests for valid, tampered, and stale signatures.

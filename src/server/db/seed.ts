@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import type { Db } from "./client";
-import { drops } from "./schema";
+import { drops, fakepaySettings } from "./schema";
 
 export const DEFAULT_DROP = {
   name: 'Air Timebase 01 — "Zero Oversell"',
@@ -15,14 +15,16 @@ export async function seed(db: Db): Promise<void> {
   if (existing.length === 0) {
     await db.insert(drops).values({ ...DEFAULT_DROP, startsAt: new Date() });
   }
+  // Default chaos settings: all zero, i.e. a well-behaved provider.
+  await db.insert(fakepaySettings).values({ id: 1 }).onConflictDoNothing();
 }
 
-/** Deletes all drop state (not users or sessions) and seeds a fresh drop. */
+/** Deletes all drop state (not users, sessions, or chaos settings) and seeds a fresh drop. */
 export async function resetAndSeed(db: Db): Promise<void> {
   const { rows } = await db.execute<{ tablename: string }>(
     sql`select tablename from pg_tables where schemaname = 'public'`,
   );
-  const keep = new Set(["user", "session", "account", "verification"]);
+  const keep = new Set(["user", "session", "account", "verification", "fakepay_settings"]);
   const tables = rows.map((r) => r.tablename).filter((t) => !keep.has(t));
   if (tables.length > 0) {
     const list = tables.map((t) => `"public"."${t}"`).join(", ");
