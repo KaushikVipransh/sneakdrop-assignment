@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 export const metadata: Metadata = { title: "Design tokens — Sneaker Drop" };
 
@@ -53,6 +55,22 @@ function Specimen() {
         <span className="size-6 rounded-[var(--radius-square)] bg-text" />
         <span className="size-6 rounded-[var(--radius-square)] border border-border bg-surface-muted" />
       </div>
+      <Card className="space-y-4">
+        <p className="label">Your hold</p>
+        <div className="flex flex-wrap gap-3">
+          <Button>Pay now</Button>
+          <Button variant="secondary">Release</Button>
+          <Button variant="ghost">Leave line</Button>
+          <Button loading>Pay now</Button>
+          <Button disabled>Buy</Button>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button size="sm">Reset drop</Button>
+          <Button size="sm" variant="secondary">
+            Save chaos
+          </Button>
+        </div>
+      </Card>
       <Swatches />
     </div>
   );

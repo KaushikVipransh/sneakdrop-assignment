@@ -128,7 +128,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: 401 without secret; expiry happens with no browser open.
 - [x] **T45. Design tokens.** CSS variables from DESIGN.md §2 in `globals.css` (light + dark), Tailwind v4 `@theme` mapping, Geist + Geist Mono via `next/font`.
   Done when: a token test page renders both themes correctly.
-- [ ] **T46. shadcn/ui base.** Add Button, Card, Toast (Sonner). Restyle to tokens.
+- [x] **T46. shadcn/ui base.** Add Button, Card, Toast (Sonner). Restyle to tokens.
   Done when: variants render per DESIGN.md §5.
 - [ ] **T47. `useDropStatus` hook.** TanStack Query, `refetchInterval` 1500 ms, computes `serverOffset`.
   Done when: hook test with mocked fetch.
