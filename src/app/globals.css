@@ -1,26 +1,202 @@
 @import "tailwindcss";
 
+/* "The Ledger" design tokens (docs/DESIGN.md §2). Light is the default. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  --bg: #fafaf9;
+  --surface: #ffffff;
+  --surface-muted: #f2f2f0;
+  --border: #e4e4e2;
+  --text: #0a0a0a;
+  --text-muted: #6b6b6b;
+  --accent: #ff5a1f;
+  --accent-text: #c2410c;
+  --on-accent: #0a0a0a;
+  --success: #15803d;
+  --danger: #b91c1c;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --dur-fast: 150ms;
+  --dur-state: 250ms;
+  --dur-fill: 600ms;
+
+  color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --surface-muted: #1c1c1c;
+    --border: #262626;
+    --text: #f5f5f4;
+    --text-muted: #a3a3a3;
+    --accent: #ff6a33;
+    --accent-text: #ff8a5b;
+    --on-accent: #0a0a0a;
+    --success: #4ade80;
+    --danger: #f87171;
+    color-scheme: dark;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Explicit theme, used by the /design token page to show both themes side by side. */
+[data-theme="dark"] {
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --surface-muted: #1c1c1c;
+  --border: #262626;
+  --text: #f5f5f4;
+  --text-muted: #a3a3a3;
+  --accent: #ff6a33;
+  --accent-text: #ff8a5b;
+  --on-accent: #0a0a0a;
+  --success: #4ade80;
+  --danger: #f87171;
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: #fafaf9;
+  --surface: #ffffff;
+  --surface-muted: #f2f2f0;
+  --border: #e4e4e2;
+  --text: #0a0a0a;
+  --text-muted: #6b6b6b;
+  --accent: #ff5a1f;
+  --accent-text: #c2410c;
+  --on-accent: #0a0a0a;
+  --success: #15803d;
+  --danger: #b91c1c;
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-on-accent: var(--on-accent);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-card: 12px;
+  --radius-control: 8px;
+  --radius-square: 4px;
+
+  --ease-ledger: var(--ease);
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  /* Visible focus ring everywhere: 2px --text with 2px offset (DESIGN.md §7). */
+  :focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Uppercase muted label (DESIGN.md §2.2). */
+  .label {
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+  }
+
+  .num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .display-number {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(72px, 18vw, 160px);
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  /* Diagonal hatch for pairs held by other people: differs by pattern, not only colour. */
+  .hatch {
+    background-color: color-mix(in srgb, var(--text-muted) 40%, transparent);
+    background-image: repeating-linear-gradient(
+      135deg,
+      transparent 0 3px,
+      color-mix(in srgb, var(--text) 35%, transparent) 3px 4px
+    );
+  }
+
+  .receipt-edge {
+    border-top: 1px dashed var(--border);
+  }
+}
+
+@keyframes live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes own-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-live {
+  animation: live-pulse 2s var(--ease) infinite;
+}
+
+.animate-own {
+  animation: own-pulse var(--dur-fill) var(--ease) 1;
+}
+
+.animate-spin-slow {
+  animation: spin 900ms linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
