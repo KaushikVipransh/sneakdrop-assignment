@@ -118,7 +118,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: visiting the app creates a guest session; `user` row exists.
 - [x] **T40. Magic link (optional path).** Resend provider, `RESEND_API_KEY` optional in env; in dev, log the link to console.
   Done when: sign-in link works locally; anonymous user links to email account.
-- [ ] **T41. `requireUser()` helper.** Returns user or 401 for route handlers.
+- [x] **T41. `requireUser()` helper.** Returns user or 401 for route handlers.
   Done when: test passes.
 - [ ] **T42. Mutation routes.** `POST /api/drop/hold`, `POST /api/holds/[id]/release`, `POST /api/holds/[id]/pay`, `POST /api/drop/waitlist`, `DELETE /api/drop/waitlist`. Map domain results to HTTP (200 / 409 / 403 / 404) with stable JSON `{ code, message }`.
   Done when: route tests for each success and error code.
