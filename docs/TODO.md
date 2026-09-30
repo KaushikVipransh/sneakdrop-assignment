@@ -122,7 +122,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: test passes.
 - [x] **T42. Mutation routes.** `POST /api/drop/hold`, `POST /api/holds/[id]/release`, `POST /api/holds/[id]/pay`, `POST /api/drop/waitlist`, `DELETE /api/drop/waitlist`. Map domain results to HTTP (200 / 409 / 403 / 404) with stable JSON `{ code, message }`.
   Done when: route tests for each success and error code.
-- [ ] **T43. Status route.** `GET /api/drop/status` per PRD §8.4 (`serverTime`, drop counts, `me` block). Runs reconcile. Triggers `dispatchDue` with `after()`.
+- [x] **T43. Status route.** `GET /api/drop/status` per PRD §8.4 (`serverTime`, drop counts, `me` block). Runs reconcile. Triggers `dispatchDue` with `after()`.
   Done when: response matches Zod schema in test; shared type exported for client.
 - [ ] **T44. Cron route.** `POST /api/cron/reconcile` protected by `CRON_SECRET` header; runs reconcile + `dispatchDue`. Dev-only interval runner (`pnpm dev:cron`) calls it every 10 s.
   Done when: 401 without secret; expiry happens with no browser open.
