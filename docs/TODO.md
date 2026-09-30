@@ -105,7 +105,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: route tests for 401, 200 duplicate, 200 success.
 - [x] **T37. Dispatcher.** `fakepay.dispatchDue(limit)`: claims due `PENDING` deliveries (`FOR UPDATE SKIP LOCKED`), POSTs signed payload to the webhook URL, marks `DELIVERED` or retries with backoff (max 5, then `DEAD`).
   Done when: integration test with app server: delivery reaches webhook and is marked DELIVERED.
-- [ ] **T38. Chaos scenario tests.** End-to-end with real DB:
+- [x] **T38. Chaos scenario tests.** End-to-end with real DB:
   - duplicate success ×3 → 1 order;
   - success after 6 min → no order, refund, next waiter promoted;
   - failed after success → order kept;
