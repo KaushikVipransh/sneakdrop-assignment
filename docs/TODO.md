@@ -166,7 +166,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
 
 - [x] **T61. Neon project.** Create DB, run migrations with direct URL, seed.
   Done when: `select count(*) from drops` = 1 on Neon.
-- [ ] **T62. Vercel deploy.** Link repo, set env vars (`DATABASE_URL`, `WEBHOOK_SECRET`, `CRON_SECRET`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `ADMIN_EMAILS`, optional `RESEND_API_KEY`), same region as Neon.
+- [x] **T62. Vercel deploy.** Link repo, set env vars (`DATABASE_URL`, `WEBHOOK_SECRET`, `CRON_SECRET`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `ADMIN_EMAILS`, optional `RESEND_API_KEY`), same region as Neon.
   Done when: production URL loads status page with guest session.
 - [ ] **T63. External cron.** cron-job.org (or QStash) calls `/api/cron/reconcile` every minute with secret.
   Done when: hold expires in prod with no browser open.

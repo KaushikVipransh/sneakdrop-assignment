@@ -1,0 +1,22 @@
+name: Reconcile cron
+
+# Backup scheduler: expires holds, promotes the line, and delivers webhooks
+# when nobody has the page open. GitHub runs schedules at most every 5 minutes
+# (often later); a 1-minute external cron (cron-job.org) is the primary.
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Call /api/cron/reconcile
+        env:
+          APP_URL: ${{ vars.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          curl -fsS -X POST "$APP_URL/api/cron/reconcile" \
+            -H "Authorization: Bearer $CRON_SECRET" --max-time 60
