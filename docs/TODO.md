@@ -24,7 +24,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: `pnpm typecheck && pnpm lint` pass.
 - [x] **T03. Vitest setup.** Install Vitest, add `vitest.config.ts` with `@/*` alias, add one trivial test.
   Done when: `pnpm test` passes.
-- [ ] **T04. Local Postgres.** `docker-compose.yml` with Postgres 17 (port 5432, volume). Add `.env.example` with `DATABASE_URL`, `DATABASE_URL_DIRECT`.
+- [x] **T04. Local Postgres.** `docker-compose.yml` with Postgres 17 (port 5432, volume). Add `.env.example` with `DATABASE_URL`, `DATABASE_URL_DIRECT`.
   Done when: `docker compose up -d` and `psql $DATABASE_URL -c 'select 1'` work.
 - [ ] **T05. Env validation.** `src/server/env.ts` parses env with Zod, fails fast on missing vars.
   Done when: app boots with `.env`; boot fails with clear message when `DATABASE_URL` is removed.
