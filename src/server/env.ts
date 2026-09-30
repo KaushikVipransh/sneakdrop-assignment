@@ -13,6 +13,8 @@ const envSchema = z.object({
   EMAIL_FROM: z.string().default("Sneaker Drop <onboarding@resend.dev>"),
   /** Shared secret the external scheduler sends as "Authorization: Bearer <secret>". */
   CRON_SECRET: z.string().min(16, "CRON_SECRET must be at least 16 characters"),
+  /** Comma-separated emails allowed into /admin (sign in with a magic link). */
+  ADMIN_EMAILS: z.string().default(""),
   WEBHOOK_SECRET: z.string().min(16, "WEBHOOK_SECRET must be at least 16 characters"),
 });
 

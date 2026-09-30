@@ -8,3 +8,4 @@ process.env.DB_POOL_MAX ??= "20";
 process.env.WEBHOOK_SECRET ??= "test-webhook-secret-0123456789";
 process.env.BETTER_AUTH_SECRET ??= "test-better-auth-secret-0123456789abcdef";
 process.env.CRON_SECRET ??= "test-cron-secret-0123456789";
+process.env.ADMIN_EMAILS ??= "admin@example.com";

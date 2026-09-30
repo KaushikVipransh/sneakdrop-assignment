@@ -149,7 +149,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
 
 ## M5 — Admin, load test, CI
 
-- [ ] **T55. Admin guard.** `ADMIN_EMAILS` env; `/admin` and admin routes require it.
+- [x] **T55. Admin guard.** `ADMIN_EMAILS` env; `/admin` and admin routes require it.
   Done when: non-admin gets 403.
 - [ ] **T56. Admin data route.** Counts, invariant check, active holds, first 20 waiters, last 50 webhook events, refunds.
   Done when: route test.
