@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DATABASE_URL: postgres://sneakdrop:sneakdrop@localhost:5432/sneakdrop
+  DATABASE_URL_DIRECT: postgres://sneakdrop:sneakdrop@localhost:5432/sneakdrop
+  DATABASE_URL_TEST: postgres://sneakdrop:sneakdrop@localhost:5432/sneakdrop_test
+  APP_URL: http://localhost:3000
+  WEBHOOK_SECRET: ci-webhook-secret-0123456789abcdef
+  BETTER_AUTH_SECRET: ci-better-auth-secret-0123456789abcdef0123
+  CRON_SECRET: ci-cron-secret-0123456789
+  ADMIN_EMAILS: admin@example.com
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: sneakdrop
+          POSTGRES_PASSWORD: sneakdrop
+          POSTGRES_DB: sneakdrop
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U sneakdrop -d sneakdrop"
+          --health-interval 2s --health-timeout 3s --health-retries 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Create test database
+        run: psql postgres://sneakdrop:sneakdrop@localhost:5432/sneakdrop -c "create database sneakdrop_test"
+
+      - name: Migrate
+        run: pnpm db:migrate && pnpm db:migrate --test
+
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Load test (500 users, chaos on)
+        run: |
+          pnpm db:seed
+          pnpm start > server.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://localhost:3000/api/drop/status > /dev/null && break; sleep 1; done
+          pnpm loadtest --users 500 --payRate 0.7 --chaos --reset
+
+      - name: Server log on failure
+        if: failure()
+        run: tail -200 server.log || true
