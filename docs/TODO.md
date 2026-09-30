@@ -134,7 +134,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: hook test with mocked fetch.
 - [x] **T48. `Countdown` component.** From `expiresAt` + `serverOffset`; warning < 60 s; `aria-live` throttled.
   Done when: component test with fake timers.
-- [ ] **T49. `StockGrid` component.** 20 squares, states per DESIGN.md §3.2, hidden text summary.
+- [x] **T49. `StockGrid` component.** 20 squares, states per DESIGN.md §3.2, hidden text summary.
   Done when: component test renders correct counts per state.
 - [ ] **T50. Header, stats strip, `LiveDot`.** Per DESIGN.md §3.4.
   Done when: renders; no layout shift at 375 px.
