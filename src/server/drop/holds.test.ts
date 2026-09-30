@@ -1,7 +1,9 @@
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { db } from "@/server/db/client";
 import { auditLog, holds } from "@/server/db/schema";
-import { createDrop, insertHold, insertOrder } from "@/test/factories";
+import { eq } from "drizzle-orm";
+import { createDrop, insertHold, insertOrder, insertWaiting } from "@/test/factories";
+import { joinWaitlist } from "./waitlist";
 import { resetDb } from "@/test/db";
 import { createHold, releaseHold } from "./holds";
 
@@ -101,5 +103,47 @@ describe("releaseHold", () => {
     const drop = await createDrop();
     const hold = await insertHold(drop, "u1", { expiresAt: new Date(Date.now() - 1000) });
     expect(await releaseHold("u1", hold.id)).toEqual({ code: "NOT_ACTIVE", status: "EXPIRED" });
+  });
+});
+
+describe("queue first", () => {
+  beforeEach(resetDb);
+  afterAll(resetDb);
+
+  it("gives a free pair to the waitlist, not to a new Buy click", async () => {
+    const drop = await createDrop({ totalStock: 1 });
+    // A free pair and a waiter at the same time (the state right after a hold ends).
+    await insertWaiting(drop, "waiter");
+
+    expect(await createHold("clicker", drop.id)).toEqual({
+      code: "SOLD_OUT",
+      canJoinWaitlist: true,
+    });
+    const [hold] = await db.select().from(holds);
+    expect(hold).toMatchObject({ userId: "waiter", source: "waitlist" });
+  });
+
+  it("still sells normally once the line is empty", async () => {
+    const drop = await createDrop({ totalStock: 2 });
+    await insertWaiting(drop, "waiter");
+    expect((await createHold("clicker", drop.id)).code).toBe("HOLD_CREATED");
+  });
+});
+
+describe("release triggers promotion", () => {
+  beforeEach(resetDb);
+  afterAll(resetDb);
+
+  it("hands a released pair to the first waiter in the same transaction", async () => {
+    const drop = await createDrop({ totalStock: 1, holdSeconds: 300 });
+    const created = await createHold("a", drop.id);
+    if (created.code !== "HOLD_CREATED") throw new Error(created.code);
+    await joinWaitlist("b", drop.id);
+
+    const result = await releaseHold("a", created.hold.id);
+
+    expect(result).toMatchObject({ code: "RELEASED", promoted: [{ userId: "b" }] });
+    const active = await db.select().from(holds).where(eq(holds.status, "ACTIVE"));
+    expect(active).toMatchObject([{ userId: "b", source: "waitlist" }]);
   });
 });

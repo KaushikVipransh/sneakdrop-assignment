@@ -74,9 +74,9 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: test with 5 users returns 1..5; after #2 leaves, #3 becomes 2.
 - [x] **T25. Promotion inside `reconcile`.** After expiry, while `available ≥ 1` and queue non-empty: take first `WAITING`; if user ineligible (has 2 pairs or active hold) mark `SKIPPED` and continue; else mark `PROMOTED` and create hold `source = waitlist`, `expires_at = now + hold_seconds`.
   Done when: tests: expiry promotes first user with fresh 5 min; ineligible user skipped; empty queue returns pair to stock.
-- [ ] **T26. Queue-first rule in `createHold`.** If waitlist has `WAITING` entries, `createHold` returns `SOLD_OUT` even if a pair is momentarily free.
+- [x] **T26. Queue-first rule in `createHold`.** If waitlist has `WAITING` entries, `createHold` returns `SOLD_OUT` even if a pair is momentarily free.
   Done when: test passes.
-- [ ] **T27. Release triggers promotion.** `releaseHold` runs reconcile after release in the same tx.
+- [x] **T27. Release triggers promotion.** `releaseHold` runs reconcile after release in the same tx.
   Done when: test: release → first waiter gets hold immediately.
 - [ ] **T28. Randomised invariant test.** fast-check: random sequences of buy / release / expire (advance clock) / join / leave across 50 users.
   Done when: invariant never breaks over 500 runs; per-user limits never exceeded.

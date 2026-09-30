@@ -4,8 +4,10 @@ import { holds, type Hold, type HoldStatus } from "../db/schema";
 import { audit } from "./audit";
 import { getCounts } from "./counts";
 import { isUuid } from "./ids";
+import { promoteWaiters } from "./reconcile";
 import { inDropTx, type ClockOptions } from "./tx";
 import { getUserStanding } from "./user";
+import { getWaitlistLength } from "./waitlist";
 
 export type CreateHoldResult =
   | { code: "HOLD_CREATED"; hold: Hold }
@@ -32,6 +34,11 @@ export function createHold(
 
     const counts = await getCounts(tx, drop.id);
     if (counts.available < 1) return { code: "SOLD_OUT", canJoinWaitlist: true };
+    // Queue first: reconcile already gave free pairs to waiters, so a non-empty
+    // line here means none is left for a new click. Checked explicitly anyway.
+    if ((await getWaitlistLength(tx, drop.id)) > 0) {
+      return { code: "SOLD_OUT", canJoinWaitlist: true };
+    }
 
     const [hold] = await tx
       .insert(holds)
@@ -57,7 +64,7 @@ export function createHold(
 }
 
 export type ReleaseHoldResult =
-  | { code: "RELEASED"; hold: Hold }
+  | { code: "RELEASED"; hold: Hold; promoted: Hold[] }
   | { code: "NOT_FOUND" }
   | { code: "NOT_ACTIVE"; status: HoldStatus };
 
@@ -95,6 +102,8 @@ export async function releaseHold(
       meta: { reason: "user" },
       at: now,
     });
-    return { code: "RELEASED", hold: released! };
+    // The freed pair goes to the next person in line within this transaction.
+    const { promoted } = await promoteWaiters(tx, drop, now);
+    return { code: "RELEASED", hold: released!, promoted };
   });
 }
