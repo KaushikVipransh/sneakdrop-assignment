@@ -7,11 +7,13 @@ import * as schema from "./db/schema";
 import { env } from "./env";
 import { transferGuestActivity } from "./auth-link";
 import { sendMagicLinkEmail } from "./email";
+import { trustedOrigins } from "./trusted-origins";
 
 export const auth = betterAuth({
   appName: "Sneaker Drop",
   baseURL: env.APP_URL,
   secret: env.BETTER_AUTH_SECRET,
+  trustedOrigins: trustedOrigins({ ...process.env, APP_URL: env.APP_URL }),
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: {
