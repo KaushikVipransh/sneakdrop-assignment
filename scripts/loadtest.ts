@@ -65,6 +65,15 @@ async function call<T = Record<string, unknown>>(
   return { ms: performance.now() - started, status: response.status, body: body as T };
 }
 
+function tally(results: Timed<{ code?: string }>[]): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const r of results) {
+    const key = r.body.code ?? `HTTP ${r.status}`;
+    out[key] = (out[key] ?? 0) + 1;
+  }
+  return out;
+}
+
 async function pool<T, R>(items: T[], size: number, fn: (item: T) => Promise<R>): Promise<R[]> {
   const out: R[] = new Array(items.length);
   let next = 0;
@@ -176,11 +185,15 @@ async function main() {
     .map((b, i) => ({ b, cookie: cookies[i]! }))
     .filter((x) => x.b.body.code === "SOLD_OUT")
     .slice(0, 200);
+  // Joins can be refused with STOCK_AVAILABLE when failed payments already freed pairs.
   const joins = await Promise.all(
-    losers.map((l) => call("/api/drop/waitlist", { method: "POST", cookie: l.cookie })),
+    losers.map((l) =>
+      call<{ code?: string }>("/api/drop/waitlist", { method: "POST", cookie: l.cookie }),
+    ),
   );
   console.log(
     `paid ${pays.filter((p) => p.status === 200).length}/${payers.length} winners · ${joins.filter((j) => j.status === 200).length} losers joined the line`,
+    tally(joins),
   );
 
   // 4. Let the provider deliver every webhook (the cron endpoint drives the dispatcher).

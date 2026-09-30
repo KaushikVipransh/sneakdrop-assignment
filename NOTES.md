@@ -2,7 +2,7 @@
 
 A limited sneaker drop (20 pairs) that cannot oversell: 5-minute holds, 1 hold and 2 pairs per person, a first-come-first-served waiting line with automatic promotion, and a fake payment provider whose webhooks arrive late, twice, or out of order.
 
-- **Live:** _added after deploy_
+- **Live:** https://sneakdrop-vipransh-kaushiks-projects.vercel.app (Vercel `iad1` + Neon Postgres `us-east-1`). Admin: `/admin`.
 - **Stack:** TypeScript · Next.js 16 (App Router, route handlers) · Postgres 17 · Drizzle ORM · Better Auth (guest + magic link) · TanStack Query · Tailwind v4 · Vitest + fast-check · Playwright.
 - **Planning docs:** [docs/PRD.md](docs/PRD.md), [docs/TECH_STACK.md](docs/TECH_STACK.md), [docs/DESIGN.md](docs/DESIGN.md), [docs/TODO.md](docs/TODO.md).
 
@@ -122,12 +122,29 @@ The webhook handler ([`applyPaymentEvent`](src/server/drop/webhook.ts)) runs und
 6. **One drop at a time:** the site sells the most recently created drop.
 7. **Waiting-line promotion needs no action** from the waiter: their page switches to "Your turn" with a fresh 5-minute countdown, and the tab title changes.
 
+## Production
+
+- **Hosting:** Vercel (functions in `iad1`) and Neon Postgres 17 (`us-east-1`). The app uses the pooled connection; migrations use the direct one.
+- **Scheduler:** a GitHub Actions workflow ([`.github/workflows/cron.yml`](.github/workflows/cron.yml)) calls `POST /api/cron/reconcile` every 5 minutes (GitHub's minimum). For 1-minute expiry when nobody is online, a cron-job.org job calls the same URL every minute with the header `Authorization: Bearer <CRON_SECRET>`.
+- **Admin sign-in in production:** no email provider is configured, so the magic link is written to the Vercel function logs (Project → Logs, search "magic link"). Set `RESEND_API_KEY` to send real emails.
+- **Production load test** (300 guests, 70% of winners pay, chaos on: duplicates 50%, reorder 20%, fail 10%, delay 0–5 s):
+
+  ```
+  Buy x300 in 4.16s: { SOLD_OUT: 280, HOLD_CREATED: 20 }
+  Buy latency ms: p50 2002 · p95 3880
+  orders confirmed: 11 / 20 · refunds: 2 · duplicate webhooks ignored: 15
+  max pairs per user: 1 · 5xx responses: 0
+  PASS: orders ≤ 20
+  ```
+
+  The browser specs in `e2e/status-page.spec.ts` also pass against production.
+
 ## Known limits
 
-- Local load-test latency (Buy p95 ≈ 4 s for 1,000 simultaneous clicks) was measured on one laptop running client, server, and an emulated x64 Postgres together; the lock-held section is a few milliseconds per winning click. For 100k+ requests/s, the next step is an admission gate (e.g. Redis `DECR`) in front of the same Postgres transaction.
+- **Latency.** Buy p95 is about 4 s both locally (1,000 clicks on one laptop with an emulated Postgres) and in production (300 clicks, Neon at its smallest 0.25 CU compute, cold serverless functions). This misses the PRD target of 500 ms. Every winning click waits on one row lock, and each locked transaction makes several round trips to the database. Next steps: larger Neon compute, fewer queries per transaction, and for 100k+ requests/s an admission gate (e.g. Redis `DECR`) in front of the same Postgres transaction.
 - Refunds are simulated (intent status `REFUNDED`); no money moves.
 - Rate limiting is Better Auth's built-in limiter only.
 
 ## Screen recording
 
-_Link added after recording._
+_Link added after recording. Shot list: [docs/RECORDING.md](docs/RECORDING.md)._

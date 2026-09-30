@@ -168,9 +168,9 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: `select count(*) from drops` = 1 on Neon.
 - [x] **T62. Vercel deploy.** Link repo, set env vars (`DATABASE_URL`, `WEBHOOK_SECRET`, `CRON_SECRET`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `ADMIN_EMAILS`, optional `RESEND_API_KEY`), same region as Neon.
   Done when: production URL loads status page with guest session.
-- [ ] **T63. External cron.** cron-job.org (or QStash) calls `/api/cron/reconcile` every minute with secret.
+- [x] **T63. External cron.** cron-job.org (or QStash) calls `/api/cron/reconcile` every minute with secret.
   Done when: hold expires in prod with no browser open.
-- [ ] **T64. Prod smoke + load test.** Run load script against prod with 300 users.
+- [x] **T64. Prod smoke + load test.** Run load script against prod with 300 users.
   Done when: PASS, invariant green in admin.
 - [x] **T65. NOTES.md.** Rename `notes.md` to `NOTES.md` (Windows is case-insensitive: `git mv notes.md tmp.md && git mv tmp.md NOTES.md`). Fill in: requirements (Node, pnpm, Docker), env vars, how to run, how to test, how to run load test, design decisions, assumptions (PRD §12), live URL.
   Done when: fresh clone following NOTES.md runs in < 5 minutes.
