@@ -1,12 +1,10 @@
-import { and, eq } from "drizzle-orm";
-import { db } from "../db/client";
+import { eq } from "drizzle-orm";
 import { holds, type Hold, type HoldStatus } from "../db/schema";
 import { audit } from "./audit";
 import { getCounts } from "./counts";
-import { isUuid } from "./ids";
 import { promoteWaiters } from "./reconcile";
 import { inDropTx, type ClockOptions } from "./tx";
-import { getUserStanding } from "./user";
+import { findOwnedHoldDropId, getUserStanding } from "./user";
 import { getWaitlistLength } from "./waitlist";
 
 export type CreateHoldResult =
@@ -74,15 +72,10 @@ export async function releaseHold(
   holdId: string,
   options: ClockOptions = {},
 ): Promise<ReleaseHoldResult> {
-  if (!isUuid(holdId)) return { code: "NOT_FOUND" };
-  // Find the drop first (unlocked) so we know which lock to take.
-  const [found] = await db
-    .select({ dropId: holds.dropId })
-    .from(holds)
-    .where(and(eq(holds.id, holdId), eq(holds.userId, userId)));
-  if (!found) return { code: "NOT_FOUND" };
+  const dropId = await findOwnedHoldDropId(userId, holdId);
+  if (!dropId) return { code: "NOT_FOUND" };
 
-  return inDropTx(found.dropId, options, async ({ tx, drop, now }) => {
+  return inDropTx(dropId, options, async ({ tx, drop, now }) => {
     const [hold] = await tx.select().from(holds).where(eq(holds.id, holdId));
     if (!hold) return { code: "NOT_FOUND" };
     if (hold.status !== "ACTIVE") return { code: "NOT_ACTIVE", status: hold.status };

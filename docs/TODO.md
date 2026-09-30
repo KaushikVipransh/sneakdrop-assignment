@@ -93,7 +93,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: tests for valid, tampered, and stale signatures.
 - [x] **T33. `fakepay.createIntent(holdId)`.** Writes intent and schedules deliveries per chaos settings (success or fail by `fail_rate`; extra copies by `duplicate_rate`; opposite event after success by `reorder_rate`; random delay in range). Chaos RNG injectable for tests.
   Done when: tests with fixed seed produce expected delivery rows.
-- [ ] **T34. `startPayment(userId, holdId)`.** Owner + ACTIVE + not expired + no existing PENDING intent; creates intent via fakepay. Idempotent.
+- [x] **T34. `startPayment(userId, holdId)`.** Owner + ACTIVE + not expired + no existing PENDING intent; creates intent via fakepay. Idempotent.
   Done when: tests pass.
 - [ ] **T35. `applyPaymentEvent(event)`.** Tx: insert into `webhook_events` (conflict → `duplicate`, return). Lock drop, reconcile. Then:
   - success + hold ACTIVE + not expired → hold `CONVERTED`, order created, intent `SUCCEEDED`;
