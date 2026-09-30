@@ -5,7 +5,12 @@ import { resetDrop, sql } from "./db";
 async function becomeAdmin(page: Page) {
   await page.goto("/");
   await expect(page.getByRole("button", { name: /Buy|Join the line/ })).toBeVisible();
-  const session = await page.evaluate(() => fetch("/api/auth/get-session").then((r) => r.json()));
+  const getSession = () =>
+    page.evaluate(() => fetch("/api/auth/get-session").then((r) => r.json()));
+  await expect.poll(async () => (await getSession())?.user?.id ?? null).not.toBeNull();
+  const session = await getSession();
+  // Free the address from an earlier run, then give it to this guest.
+  await sql(`update "user" set email = id || '@old.invalid' where email = 'admin@example.com'`);
   await sql(`update "user" set email = 'admin@example.com', is_anonymous = false where id = $1`, [
     session.user.id,
   ]);
@@ -46,4 +51,21 @@ test("admin console shows live counts, the invariant, and webhook outcomes", asy
   const webhooks = page.getByRole("region", { name: "Webhook events (last 50)" });
   await expect(webhooks.getByText("order created")).toBeVisible();
   await expect(page.getByTestId("invariant")).toContainText("✓");
+});
+
+test("admin can change chaos settings and reset the drop", async ({ page }) => {
+  await resetDrop(20);
+  await becomeAdmin(page);
+  await page.goto("/admin");
+  const fail = page.getByRole("slider", { name: /Fail/ });
+  await fail.fill("1");
+  await page.getByRole("button", { name: "Save chaos" }).click();
+  await expect(page.getByText("Chaos settings saved.")).toBeVisible();
+
+  await page.getByRole("button", { name: "Reset drop" }).click();
+  await expect(page.getByText("Reset the drop?", { exact: false })).toBeVisible();
+  await page.getByRole("button", { name: "Yes, reset" }).click();
+  await expect(page.getByText("Drop reset. 20 pairs, fresh start.")).toBeVisible();
+  // Chaos survives a reset (resetDrop() in the next spec calms the provider again).
+  await expect(page.getByRole("slider", { name: /Fail/ })).toHaveValue("1");
 });

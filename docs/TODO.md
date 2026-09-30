@@ -155,7 +155,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: route test.
 - [x] **T57. Admin page.** Layout per DESIGN.md §4, polling.
   Done when: renders live data during a manual run.
-- [ ] **T58. Chaos controls + reset.** Update `fakepay_settings`; Reset drop with confirm dialog.
+- [x] **T58. Chaos controls + reset.** Update `fakepay_settings`; Reset drop with confirm dialog.
   Done when: changing settings changes delivery rows; reset clears state.
 - [ ] **T59. HTTP load script.** `pnpm loadtest --users 1000 --payRate 0.7` creates guest users, fires Buy in parallel, pays for some, waits, prints holds / orders / refunds / p95 latency and PASS/FAIL on `orders ≤ 20`.
   Done when: PASS locally 3 runs in a row, with chaos on.
