@@ -1,5 +1,15 @@
 import { sql } from "drizzle-orm";
-import { check, integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import {
+  check,
+  index,
+  integer,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 const createdAt = () => timestamp("created_at", { withTimezone: true }).notNull().defaultNow();
 
@@ -23,3 +33,34 @@ export const drops = pgTable(
 );
 
 export type Drop = typeof drops.$inferSelect;
+
+export const holdStatus = pgEnum("hold_status", ["ACTIVE", "CONVERTED", "EXPIRED", "RELEASED"]);
+export const holdSource = pgEnum("hold_source", ["buy", "waitlist"]);
+
+/** A reservation of exactly one pair for one user. */
+export const holds = pgTable(
+  "holds",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    dropId: uuid("drop_id")
+      .notNull()
+      .references(() => drops.id, { onDelete: "cascade" }),
+    userId: text("user_id").notNull(),
+    status: holdStatus("status").notNull().default("ACTIVE"),
+    source: holdSource("source").notNull().default("buy"),
+    createdAt: createdAt(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    endedAt: timestamp("ended_at", { withTimezone: true }),
+  },
+  (t) => [
+    // Safety net behind the application check: one ACTIVE hold per user per drop.
+    uniqueIndex("holds_one_active_per_user")
+      .on(t.dropId, t.userId)
+      .where(sql`${t.status} = 'ACTIVE'`),
+    index("holds_drop_status_expires").on(t.dropId, t.status, t.expiresAt),
+    index("holds_drop_user").on(t.dropId, t.userId),
+  ],
+);
+
+export type Hold = typeof holds.$inferSelect;
+export type HoldStatus = Hold["status"];

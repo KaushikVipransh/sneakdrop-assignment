@@ -8,6 +8,13 @@
       "when": 1790780246242,
       "tag": "0000_drops",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790780359812,
+      "tag": "0001_holds",
+      "breakpoints": true
     }
   ]
 }

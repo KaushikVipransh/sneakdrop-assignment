@@ -35,7 +35,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: a script runs `select 1` through Drizzle.
 - [x] **T07. Schema: `drops`.** `id`, `name`, `total_stock`, `hold_seconds` (default 300), `max_per_user` (default 2), `starts_at`, `created_at`.
   Done when: migration generates and applies cleanly.
-- [ ] **T08. Schema: `holds`.** `id`, `drop_id`, `user_id`, `status` enum (`ACTIVE`, `CONVERTED`, `EXPIRED`, `RELEASED`), `source` enum (`buy`, `waitlist`), `created_at`, `expires_at`, `ended_at`. Partial unique index `(drop_id, user_id) WHERE status = 'ACTIVE'`.
+- [x] **T08. Schema: `holds`.** `id`, `drop_id`, `user_id`, `status` enum (`ACTIVE`, `CONVERTED`, `EXPIRED`, `RELEASED`), `source` enum (`buy`, `waitlist`), `created_at`, `expires_at`, `ended_at`. Partial unique index `(drop_id, user_id) WHERE status = 'ACTIVE'`.
   Done when: migration applies; inserting two ACTIVE holds for one user fails with unique violation (test).
 - [ ] **T09. Schema: `orders`.** `id`, `drop_id`, `user_id`, `hold_id` (unique), `created_at`.
   Done when: migration applies; duplicate `hold_id` insert fails (test).
