@@ -11,6 +11,8 @@ const envSchema = z.object({
   /** Optional: without it, magic links are printed to the server console. */
   RESEND_API_KEY: z.string().optional(),
   EMAIL_FROM: z.string().default("Sneaker Drop <onboarding@resend.dev>"),
+  /** Shared secret the external scheduler sends as "Authorization: Bearer <secret>". */
+  CRON_SECRET: z.string().min(16, "CRON_SECRET must be at least 16 characters"),
   WEBHOOK_SECRET: z.string().min(16, "WEBHOOK_SECRET must be at least 16 characters"),
 });
 
