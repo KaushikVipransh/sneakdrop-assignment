@@ -153,7 +153,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: non-admin gets 403.
 - [x] **T56. Admin data route.** Counts, invariant check, active holds, first 20 waiters, last 50 webhook events, refunds.
   Done when: route test.
-- [ ] **T57. Admin page.** Layout per DESIGN.md §4, polling.
+- [x] **T57. Admin page.** Layout per DESIGN.md §4, polling.
   Done when: renders live data during a manual run.
 - [ ] **T58. Chaos controls + reset.** Update `fakepay_settings`; Reset drop with confirm dialog.
   Done when: changing settings changes delivery rows; reset clears state.
