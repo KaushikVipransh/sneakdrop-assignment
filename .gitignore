@@ -48,3 +48,5 @@ Thumbs.db
 next-env.d.ts
 .superpowers/
 .pgdata/
+/test-results/
+/playwright-report/

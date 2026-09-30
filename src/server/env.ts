@@ -7,6 +7,10 @@ const envSchema = z.object({
   DB_POOL_MAX: z.coerce.number().int().positive().default(10),
   /** Public base URL of this app; the fake provider POSTs webhooks here. */
   APP_URL: z.url().default("http://localhost:3000"),
+  BETTER_AUTH_SECRET: z.string().min(32, "BETTER_AUTH_SECRET must be at least 32 characters"),
+  /** Optional: without it, magic links are printed to the server console. */
+  RESEND_API_KEY: z.string().optional(),
+  EMAIL_FROM: z.string().default("Sneaker Drop <onboarding@resend.dev>"),
   WEBHOOK_SECRET: z.string().min(16, "WEBHOOK_SECRET must be at least 16 characters"),
 });
 

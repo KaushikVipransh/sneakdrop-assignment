@@ -247,3 +247,5 @@ export const fakepaySettings = pgTable(
 );
 
 export type FakepaySettings = typeof fakepaySettings.$inferSelect;
+
+export * from "./auth-schema";

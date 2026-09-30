@@ -6,6 +6,7 @@ describe("parseEnv", () => {
     const env = parseEnv({
       DATABASE_URL: "postgres://u:p@localhost:5432/db",
       WEBHOOK_SECRET: "0123456789abcdef",
+      BETTER_AUTH_SECRET: "0123456789abcdef0123456789abcdef",
     });
     expect(env.DATABASE_URL).toBe("postgres://u:p@localhost:5432/db");
     expect(env.NODE_ENV).toBe("development");
