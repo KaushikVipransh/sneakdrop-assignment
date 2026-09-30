@@ -47,7 +47,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: a DB test passes and leaves no rows behind.
 - [x] **T13. `lockDrop(tx, dropId)`.** `SELECT … FOR UPDATE` on the drop row; returns drop or throws `DropNotFound`.
   Done when: unit test passes.
-- [ ] **T14. `getCounts(tx, dropId)`.** Returns `{ total, sold, held, available }` computed from rows (no stored counter).
+- [x] **T14. `getCounts(tx, dropId)`.** Returns `{ total, sold, held, available }` computed from rows (no stored counter).
   Done when: test with seeded holds/orders returns correct numbers.
 - [ ] **T15. `reconcile(tx, dropId, now)` — expiry only.** Mark `ACTIVE` holds with `expires_at <= now` as `EXPIRED`, write audit rows. (Promotion added in M2.)
   Done when: test: expired hold becomes EXPIRED, unexpired stays ACTIVE.
