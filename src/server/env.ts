@@ -5,6 +5,8 @@ const envSchema = z.object({
   DATABASE_URL: z.url({ message: "DATABASE_URL must be a Postgres connection URL" }),
   DATABASE_URL_DIRECT: z.url().optional(),
   DB_POOL_MAX: z.coerce.number().int().positive().default(10),
+  /** Public base URL of this app; the fake provider POSTs webhooks here. */
+  APP_URL: z.url().default("http://localhost:3000"),
   WEBHOOK_SECRET: z.string().min(16, "WEBHOOK_SECRET must be at least 16 characters"),
 });
 
@@ -20,9 +22,13 @@ export class EnvError extends Error {
 /** Parses an env source and throws one readable error listing every problem. */
 export function parseEnv(source: Record<string, string | undefined>): Env {
   // Treat empty strings as missing so `FOO=` in .env behaves like an unset var.
-  const cleaned = Object.fromEntries(
+  const cleaned: Record<string, string | undefined> = Object.fromEntries(
     Object.entries(source).filter(([, value]) => value !== undefined && value !== ""),
   );
+  // On Vercel, fall back to the deployment URL when APP_URL is not set.
+  if (!cleaned.APP_URL && cleaned.VERCEL_PROJECT_PRODUCTION_URL) {
+    cleaned.APP_URL = `https://${cleaned.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
   const result = envSchema.safeParse(cleaned);
   if (!result.success) {
     throw new EnvError(
