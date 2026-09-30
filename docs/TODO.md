@@ -59,7 +59,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: exactly 1 hold exists; all 50 calls return that hold or `ALREADY_HOLDING`.
 - [x] **T19. `releaseHold(userId, holdId)`.** Only owner, only ACTIVE; sets `RELEASED`.
   Done when: tests for owner / non-owner / already-terminal.
-- [ ] **T20. Invariant helper.** `assertInvariant(tx, dropId)`: `orders ≤ total` and `orders + active holds ≤ total`. Called at the end of every mutating tx in dev/test (throws).
+- [x] **T20. Invariant helper.** `assertInvariant(tx, dropId)`: `orders ≤ total` and `orders + active holds ≤ total`. Called at the end of every mutating tx in dev/test (throws).
   Done when: a test that forces bad data makes it throw; all prior tests still pass.
 
 ## M2 — Waitlist and promotion

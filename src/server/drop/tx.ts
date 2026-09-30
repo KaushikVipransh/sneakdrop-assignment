@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import { withTx, type Tx } from "../db/client";
 import type { Drop } from "../db/schema";
+import { assertInvariant } from "./invariant";
 import { lockDrop } from "./lock";
 import { reconcile, type ReconcileResult } from "./reconcile";
 
@@ -31,7 +32,9 @@ export function inDropTx<T>(
     // server instance agrees on when a hold expires.
     const now = options.now ?? (await dbNow(tx));
     const reconciled = await reconcile(tx, drop, now);
-    return fn({ tx, drop, now, reconciled });
+    const result = await fn({ tx, drop, now, reconciled });
+    await assertInvariant(tx, drop.id);
+    return result;
   });
 }
 
