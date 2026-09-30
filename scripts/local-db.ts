@@ -2,9 +2,11 @@
  * Runs a real Postgres 17 server without Docker, using the prebuilt binaries
  * from the @embedded-postgres npm packages. Same port and credentials as
  * docker-compose.yml, so the rest of the project cannot tell the difference.
- * Useful when Docker is unavailable. Stop with Ctrl+C.
+ * Useful when Docker is unavailable.
+ *   pnpm db:local        start (runs in the background)
+ *   pnpm db:local:stop   stop
  */
-import { spawn, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -81,36 +83,35 @@ async function main() {
     if (init.status !== 0) throw new Error("initdb failed");
   }
 
-  const server = spawn(
-    exe("postgres"),
-    [
-      "-D",
-      dataDir,
-      "-p",
-      String(PORT),
-      "-c",
-      "max_connections=300",
-      "-c",
-      "listen_addresses=localhost",
-    ],
-    { stdio: ["ignore", "ignore", "pipe"] },
-  );
-  server.stderr.on("data", (chunk: Buffer) => {
-    const text = chunk.toString();
-    if (/FATAL|PANIC|ERROR/.test(text)) process.stderr.write(text);
-  });
-  server.on("exit", (code) => {
-    console.log(`postgres exited with code ${code}`);
-    process.exit(code ?? 0);
-  });
+  if (process.argv.includes("--stop")) {
+    spawnSync(exe("pg_ctl"), ["-D", dataDir, "stop", "-m", "fast"], { stdio: "inherit" });
+    return;
+  }
 
-  const stop = () => server.kill("SIGINT");
-  process.on("SIGINT", stop);
-  process.on("SIGTERM", stop);
+  // pg_ctl starts the server in the background, so it keeps running after this script exits.
+  const status = spawnSync(exe("pg_ctl"), ["-D", dataDir, "status"], { stdio: "ignore" });
+  if (status.status !== 0) {
+    const started = spawnSync(
+      exe("pg_ctl"),
+      [
+        "-D",
+        dataDir,
+        "-l",
+        path.join(dataDir, "server.log"),
+        "-o",
+        `-p ${PORT} -c max_connections=300 -c listen_addresses=localhost`,
+        "-w",
+        "start",
+      ],
+      // Do not share our stdout: the server would hold the pipe open after we exit.
+      { stdio: "ignore" },
+    );
+    if (started.status !== 0) throw new Error("pg_ctl start failed; see .pgdata/server.log");
+  }
 
   await waitForServer();
   await createDatabases();
-  console.log(`Postgres 17 listening on localhost:${PORT} (Ctrl+C to stop)`);
+  console.log(`Postgres 17 running on localhost:${PORT}. Stop it with: pnpm db:local:stop`);
 }
 
 main().catch((error: unknown) => {
