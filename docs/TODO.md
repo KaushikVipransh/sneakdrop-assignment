@@ -159,7 +159,7 @@ Source of truth for build order. Derived from [PRD.md](PRD.md), [TECH_STACK.md](
   Done when: changing settings changes delivery rows; reset clears state.
 - [x] **T59. HTTP load script.** `pnpm loadtest --users 1000 --payRate 0.7` creates guest users, fires Buy in parallel, pays for some, waits, prints holds / orders / refunds / p95 latency and PASS/FAIL on `orders ≤ 20`.
   Done when: PASS locally 3 runs in a row, with chaos on.
-- [ ] **T60. GitHub Actions CI.** Postgres service, install, migrate, typecheck, lint, test.
+- [x] **T60. GitHub Actions CI.** Postgres service, install, migrate, typecheck, lint, test.
   Done when: CI green on push.
 
 ## M6 — Deploy, docs, video
