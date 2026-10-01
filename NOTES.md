@@ -5,7 +5,7 @@ A limited sneaker drop (20 pairs) that cannot oversell: 5-minute holds, 1 hold a
 - **Live:** https://sneakdrop-one.vercel.app (Vercel `iad1` + Neon Postgres `us-east-1`). Admin: `/admin`.
 - **Stack:** TypeScript · Next.js 16 (App Router, route handlers) · Postgres 17 · Drizzle ORM · Better Auth (guest + magic link) · TanStack Query · Tailwind v4 · Vitest + fast-check · Playwright.
 - **Planning docs:** [docs/PRD.md](docs/PRD.md) (requirements, edge cases, assumptions), [docs/TECH_STACK.md](docs/TECH_STACK.md) (stack, architecture, data model), [docs/DESIGN.md](docs/DESIGN.md) (UI design system).
-- **Screen recording:** see [the last section](#screen-recording).
+- **Screen recording:** https://drive.google.com/file/d/1MGyknjjkUU0a3zmrdaoYngGriPQiHVfQ/view?usp=sharing
 
 ## Requirements
 
@@ -161,4 +161,4 @@ The webhook handler ([`applyPaymentEvent`](src/server/drop/webhook.ts)) runs und
 
 ## Screen recording
 
-_Link to be added._
+A walkthrough of the project (Google Drive): https://drive.google.com/file/d/1MGyknjjkUU0a3zmrdaoYngGriPQiHVfQ/view?usp=sharing
