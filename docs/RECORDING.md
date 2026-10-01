@@ -16,6 +16,8 @@ pnpm start             # terminal 1 — leave running
 pnpm dev:cron          # terminal 2 — leave running
 ```
 
+`pnpm dev:cron` must print `200 {"ok":true,…}` every 10 seconds. A `401` means the server is not using `.env`: `pnpm start` runs in production mode and also loads `.env.production` / `.env.production.local` if they exist, so keep production secrets in a file Next does not read (for example `.env.neon`).
+
 Keep **terminal 3** free for commands during the recording. Make its font large.
 
 **Windows to arrange:**
