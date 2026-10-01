@@ -104,6 +104,10 @@ pnpm loadtest --users 1000 --payRate 0.7 --chaos --reset
 
 While it runs, show the admin page filling up. When it ends, read the result lines. Point at the green invariant badge in admin.
 
+**What to expect.** Sold will be about 12–14, not 20: only 70% of the 20 winners pay, and chaos fails some payments. The unpaid pairs stay held, expire after five minutes, and pass to the next people in line, who are simulated users that never pay. So the page keeps showing Sold + Held = 20 with a long line, and every five minutes the held pairs move down the line. That is correct behaviour, not a stuck test. To show 20 of 20 sold instead, run `pnpm loadtest --users 1000 --payRate 1 --reset` (everyone pays, no chaos).
+
+The script leaves chaos switched on. Afterwards run `pnpm db:reset` and save all chaos sliders at 0.
+
 **Say:** "This is the test that matters. One thousand different users click Buy at the same moment, 70 percent of the winners pay, and the provider is in chaos mode: duplicates, failures, contradicting events, random delays. Result: exactly 20 holds, 980 sold-out answers, orders never above 20, no user above two pairs, zero server errors. The invariant badge stays green."
 
 ### Scene 9 — Proof and wrap-up (45 s)
