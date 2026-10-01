@@ -4,7 +4,8 @@ A limited sneaker drop (20 pairs) that cannot oversell: 5-minute holds, 1 hold a
 
 - **Live:** https://sneakdrop-one.vercel.app (Vercel `iad1` + Neon Postgres `us-east-1`). Admin: `/admin`.
 - **Stack:** TypeScript · Next.js 16 (App Router, route handlers) · Postgres 17 · Drizzle ORM · Better Auth (guest + magic link) · TanStack Query · Tailwind v4 · Vitest + fast-check · Playwright.
-- **Planning docs:** [docs/PRD.md](docs/PRD.md), [docs/TECH_STACK.md](docs/TECH_STACK.md), [docs/DESIGN.md](docs/DESIGN.md), [docs/TODO.md](docs/TODO.md).
+- **Planning docs:** [docs/PRD.md](docs/PRD.md) (requirements, edge cases, assumptions), [docs/TECH_STACK.md](docs/TECH_STACK.md) (stack, architecture, data model), [docs/DESIGN.md](docs/DESIGN.md) (UI design system).
+- **Screen recording:** see [the last section](#screen-recording).
 
 ## Requirements
 
@@ -21,11 +22,18 @@ No other services are needed locally. Email is optional: without `RESEND_API_KEY
 ```bash
 pnpm install
 cp .env.example .env            # dev defaults work as-is
+```
 
-# Start Postgres 17 — pick one:
-docker compose up -d            # creates databases sneakdrop and sneakdrop_test
-pnpm db:local                   # no Docker: same port, user, and databases
+Start Postgres 17 with **one** of these (both listen on port 5432 and create the databases `sneakdrop` and `sneakdrop_test`):
 
+```bash
+docker compose up -d            # with Docker
+pnpm db:local                   # without Docker; runs in the background, stop with pnpm db:local:stop
+```
+
+Then:
+
+```bash
 pnpm db:setup                   # migrate + seed one drop with 20 pairs
 pnpm dev                        # http://localhost:3000
 ```
@@ -38,8 +46,10 @@ Open **http://localhost:3000** in two different browsers (or one normal and one 
 
 `/admin` shows live counts, the invariant badge, active holds, the line, every webhook (including ignored duplicates), and chaos controls.
 
-1. Set `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env` (the app creates that account at startup), then sign in at `/admin` with them.
-2. Or: `ADMIN_EMAILS` lists emails that may use a magic link (default `admin@example.com`); the link is printed in the `pnpm dev` console.
+There are two ways to sign in:
+
+- **Email and password:** set `ADMIN_EMAIL` and `ADMIN_PASSWORD` (at least 12 characters) in `.env`. The app creates that account at startup; sign in at `/admin` with it.
+- **Magic link:** enter an email listed in `ADMIN_EMAILS` (`admin@example.com` in `.env.example`). The link is printed in the `pnpm dev` console.
 
 ### Useful commands
 
@@ -50,21 +60,25 @@ Open **http://localhost:3000** in two different browsers (or one normal and one 
 | `pnpm e2e`                                                 | Playwright browser tests; needs `pnpm dev` running (first time: `pnpm exec playwright install chromium`). **Resets the dev database.**                                |
 | `pnpm loadtest --users 1000 --payRate 0.7 --chaos --reset` | 1,000 guests click Buy at once, 70% of winners pay, provider chaos on. Prints PASS/FAIL on orders ≤ 20. Run against `pnpm build && pnpm start` for realistic numbers. |
 | `pnpm typecheck && pnpm lint && pnpm test`                 | Quality gate (also runs in GitHub Actions, plus a 500-user load test)                                                                                                 |
+| `pnpm demo fast-forward`                                   | Local only: makes every active hold expire now and every scheduled webhook due now, so you can see expiry and promotion without waiting 5 minutes                     |
+| `pnpm demo stock 1`                                        | Local only: sets the drop's total stock (here 1) to reach "sold out" and the waiting line quickly                                                                     |
 
 ## Environment variables
 
-| Variable                       | Required | Purpose                                                                                                                |
-| ------------------------------ | -------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `DATABASE_URL`                 | yes      | Pooled Postgres URL used by the app                                                                                    |
-| `DATABASE_URL_DIRECT`          | no       | Direct URL for migrations (Neon's non-pooler host)                                                                     |
-| `DATABASE_URL_TEST`            | tests    | Database the test suite may wipe                                                                                       |
-| `APP_URL`                      | no       | Public base URL; the fake provider POSTs webhooks to `APP_URL/api/webhooks/payments` (default `http://localhost:3000`) |
-| `BETTER_AUTH_SECRET`           | yes      | Session signing secret, ≥ 32 chars                                                                                     |
-| `WEBHOOK_SECRET`               | yes      | HMAC secret shared by the fake provider and the webhook route                                                          |
-| `CRON_SECRET`                  | yes      | Bearer token the scheduler sends to `/api/cron/reconcile`                                                              |
-| `ADMIN_EMAILS`                 | no       | Comma-separated admin emails                                                                                           |
-| `RESEND_API_KEY`, `EMAIL_FROM` | no       | Send magic links by email instead of printing them                                                                     |
-| `DB_POOL_MAX`                  | no       | Connection pool size (default 10)                                                                                      |
+| Variable                        | Required | Purpose                                                                                                                |
+| ------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`                  | yes      | Pooled Postgres URL used by the app                                                                                    |
+| `DATABASE_URL_DIRECT`           | no       | Direct URL for migrations (Neon's non-pooler host)                                                                     |
+| `DATABASE_URL_TEST`             | tests    | Database the test suite may wipe                                                                                       |
+| `APP_URL`                       | no       | Public base URL; the fake provider POSTs webhooks to `APP_URL/api/webhooks/payments` (default `http://localhost:3000`) |
+| `BETTER_AUTH_SECRET`            | yes      | Session signing secret, ≥ 32 chars                                                                                     |
+| `WEBHOOK_SECRET`                | yes      | HMAC secret shared by the fake provider and the webhook route                                                          |
+| `CRON_SECRET`                   | yes      | Bearer token the scheduler sends to `/api/cron/reconcile`                                                              |
+| `ADMIN_EMAILS`                  | no       | Comma-separated emails allowed into `/admin` by magic link                                                             |
+| `ADMIN_EMAIL`, `ADMIN_PASSWORD` | no       | Shared admin login for `/admin`; set both, password ≥ 12 chars                                                         |
+| `TRUSTED_ORIGINS`               | no       | Extra comma-separated origins allowed to call the auth endpoints                                                       |
+| `RESEND_API_KEY`, `EMAIL_FROM`  | no       | Send magic links by email instead of printing them                                                                     |
+| `DB_POOL_MAX`                   | no       | Connection pool size (default 10)                                                                                      |
 
 The app validates these at boot and refuses to start with a clear message if one is missing.
 
@@ -125,7 +139,7 @@ The webhook handler ([`applyPaymentEvent`](src/server/drop/webhook.ts)) runs und
 ## Production
 
 - **Hosting:** Vercel (functions in `iad1`) and Neon Postgres 17 (`us-east-1`). The app uses the pooled connection; migrations use the direct one.
-- **Scheduler:** a GitHub Actions workflow ([`.github/workflows/cron.yml`](.github/workflows/cron.yml)) calls `POST /api/cron/reconcile` every 5 minutes (GitHub's minimum). For 1-minute expiry when nobody is online, a cron-job.org job calls the same URL every minute with the header `Authorization: Bearer <CRON_SECRET>`.
+- **Scheduler:** a GitHub Actions workflow ([`.github/workflows/cron.yml`](.github/workflows/cron.yml)) calls `POST /api/cron/reconcile` every 5 minutes (GitHub's minimum). Correctness does not depend on it: every request reconciles first, so the scheduler only matters when nobody has the page open. For tighter expiry in that case, any external scheduler (e.g. cron-job.org) can call the same URL every minute with the header `Authorization: Bearer <CRON_SECRET>`.
 - **Admin sign-in in production:** open `/admin` and sign in with the shared admin email and password (`ADMIN_EMAIL` / `ADMIN_PASSWORD`). The credentials are sent with the submission, not stored in the repo. The magic-link option still works for emails in `ADMIN_EMAILS`; with no email provider, the link appears in the Vercel function logs.
 - **Production load test** (300 guests, 70% of winners pay, chaos on: duplicates 50%, reorder 20%, fail 10%, delay 0–5 s):
 
@@ -147,4 +161,4 @@ The webhook handler ([`applyPaymentEvent`](src/server/drop/webhook.ts)) runs und
 
 ## Screen recording
 
-_Link added after recording. Script: [docs/RECORDING.md](docs/RECORDING.md)._
+_Link to be added._

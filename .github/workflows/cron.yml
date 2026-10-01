@@ -2,7 +2,8 @@ name: Reconcile cron
 
 # Backup scheduler: expires holds, promotes the line, and delivers webhooks
 # when nobody has the page open. GitHub runs schedules at most every 5 minutes
-# (often later); a 1-minute external cron (cron-job.org) is the primary.
+# (often later); an external 1-minute cron (e.g. cron-job.org) can call the
+# same endpoint for tighter expiry.
 on:
   schedule:
     - cron: "*/5 * * * *"
