@@ -53,4 +53,6 @@ TypeScript · Next.js 16 App Router (UI + Route Handlers) · Tailwind v4 + shadc
 - 2026-09-30: M4 done (T39–T54). Better Auth guest + magic link, API routes, status route, cron route, Ledger UI (12 card states), Playwright e2e + axe (`pnpm e2e`, needs `pnpm dev`).
 - 2026-10-01: M5 local work done (T55–T59), CI workflow written (T60 unticked until pushed), NOTES.md (T65), final review + 2 fixes (T66). 183 tests.
 - 2026-10-01: M6 deploy done (T60–T64). Live: https://sneakdrop-one.vercel.app. Neon project spring-hat-70457001; Vercel project sneakdrop; GH Actions cron every 5 min.
-- **Waiting on user:** 1-minute cron-job.org job (optional), screen recording (T67, see docs/RECORDING.md).
+- 2026-10-02: Screen recording done by the user. Local database reset to 20 pairs, chaos settings at 0.
+- Production secrets live in `.env.neon` (gitignored), not `.env.production.local`: `pnpm start` loads `.env.production*` and would point the local server at Neon.
+- **Waiting on user:** paste the recording link under "Screen recording" in `NOTES.md`, then tick T67; 1-minute cron-job.org job (optional).
