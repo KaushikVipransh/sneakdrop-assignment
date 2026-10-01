@@ -23,6 +23,8 @@ export const auth = betterAuth({
       verification: schema.verification,
     },
   }),
+  // Password sign-in exists only for the shared admin account (see admin-account.ts).
+  emailAndPassword: { enabled: true, disableSignUp: true, minPasswordLength: 12 },
   session: {
     expiresIn: 60 * 60 * 24 * 30,
     cookieCache: { enabled: true, maxAge: 60 },

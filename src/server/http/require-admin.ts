@@ -23,7 +23,8 @@ export async function checkAdmin(headers: Headers): Promise<RequireUserResult> {
     return { ok: false, response: jsonError(401, "UNAUTHENTICATED", "Sign in to continue.") };
   }
   // Guests have a generated placeholder email and are never admins.
-  if (session.user.isAnonymous || !isAdminEmail(session.user.email, env.ADMIN_EMAILS)) {
+  const admins = [env.ADMIN_EMAILS, env.ADMIN_EMAIL ?? ""].join(",");
+  if (session.user.isAnonymous || !isAdminEmail(session.user.email, admins)) {
     return { ok: false, response: jsonError(403, "FORBIDDEN", "Admins only.") };
   }
   return { ok: true, user: session.user };

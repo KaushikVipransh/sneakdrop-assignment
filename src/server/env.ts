@@ -15,6 +15,9 @@ const envSchema = z.object({
   CRON_SECRET: z.string().min(16, "CRON_SECRET must be at least 16 characters"),
   /** Comma-separated emails allowed into /admin (sign in with a magic link). */
   ADMIN_EMAILS: z.string().default(""),
+  /** Shared admin login (email + password). Both must be set to enable it. */
+  ADMIN_EMAIL: z.email().optional(),
+  ADMIN_PASSWORD: z.string().min(12, "ADMIN_PASSWORD must be at least 12 characters").optional(),
   WEBHOOK_SECRET: z.string().min(16, "WEBHOOK_SECRET must be at least 16 characters"),
 });
 

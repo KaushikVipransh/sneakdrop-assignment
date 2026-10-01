@@ -38,8 +38,8 @@ Open **http://localhost:3000** in two different browsers (or one normal and one 
 
 `/admin` shows live counts, the invariant badge, active holds, the line, every webhook (including ignored duplicates), and chaos controls.
 
-1. `ADMIN_EMAILS` in `.env` lists admin emails (default `admin@example.com`).
-2. Open `/admin`, enter that email, and click the sign-in link printed in the `pnpm dev` console.
+1. Set `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env` (the app creates that account at startup), then sign in at `/admin` with them.
+2. Or: `ADMIN_EMAILS` lists emails that may use a magic link (default `admin@example.com`); the link is printed in the `pnpm dev` console.
 
 ### Useful commands
 
@@ -126,7 +126,7 @@ The webhook handler ([`applyPaymentEvent`](src/server/drop/webhook.ts)) runs und
 
 - **Hosting:** Vercel (functions in `iad1`) and Neon Postgres 17 (`us-east-1`). The app uses the pooled connection; migrations use the direct one.
 - **Scheduler:** a GitHub Actions workflow ([`.github/workflows/cron.yml`](.github/workflows/cron.yml)) calls `POST /api/cron/reconcile` every 5 minutes (GitHub's minimum). For 1-minute expiry when nobody is online, a cron-job.org job calls the same URL every minute with the header `Authorization: Bearer <CRON_SECRET>`.
-- **Admin sign-in in production:** no email provider is configured, so the magic link is written to the Vercel function logs (Project → Logs, search "magic link"). Set `RESEND_API_KEY` to send real emails.
+- **Admin sign-in in production:** open `/admin` and sign in with the shared admin email and password (`ADMIN_EMAIL` / `ADMIN_PASSWORD`). The credentials are sent with the submission, not stored in the repo. The magic-link option still works for emails in `ADMIN_EMAILS`; with no email provider, the link appears in the Vercel function logs.
 - **Production load test** (300 guests, 70% of winners pay, chaos on: duplicates 50%, reorder 20%, fail 10%, delay 0–5 s):
 
   ```

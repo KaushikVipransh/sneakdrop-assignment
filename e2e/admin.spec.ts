@@ -71,3 +71,16 @@ test("admin can change chaos settings and reset the drop", async ({ page }) => {
   // Chaos survives a reset (resetDrop() in the next spec calms the provider again).
   await expect(page.getByRole("slider", { name: /Fail/ })).toHaveValue("1");
 });
+
+test("admin signs in with the shared email and password", async ({ page }) => {
+  test.skip(!process.env.E2E_ADMIN_PASSWORD, "set E2E_ADMIN_EMAIL / E2E_ADMIN_PASSWORD");
+  await resetDrop(20);
+  await page.goto("/admin");
+  await page.getByLabel("Email").fill(process.env.E2E_ADMIN_EMAIL!);
+  await page.getByLabel("Password").fill("wrong-password-123");
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page.getByText("Wrong email or password.")).toBeVisible();
+  await page.getByLabel("Password").fill(process.env.E2E_ADMIN_PASSWORD!);
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page.getByTestId("invariant")).toBeVisible();
+});
