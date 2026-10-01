@@ -21,7 +21,8 @@
     "dev:cron": "tsx scripts/dev-cron.ts",
     "e2e": "playwright test",
     "loadtest": "tsx scripts/loadtest.ts",
-    "db:setup": "pnpm db:migrate && pnpm db:seed"
+    "db:setup": "pnpm db:migrate && pnpm db:seed",
+    "demo": "tsx scripts/demo.ts"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.0",

@@ -147,4 +147,4 @@ The webhook handler ([`applyPaymentEvent`](src/server/drop/webhook.ts)) runs und
 
 ## Screen recording
 
-_Link added after recording. Shot list: [docs/RECORDING.md](docs/RECORDING.md)._
+_Link added after recording. Script: [docs/RECORDING.md](docs/RECORDING.md)._
